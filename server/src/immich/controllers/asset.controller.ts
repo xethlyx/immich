@@ -7,6 +7,7 @@ import {
   AssetStatsDto,
   AssetStatsResponseDto,
   AuthUserDto,
+  DeviceIdDto,
   DownloadInfoDto,
   DownloadResponseDto,
   MapMarkerDto,
@@ -78,6 +79,19 @@ export class AssetController {
   @Get('time-bucket')
   getByTimeBucket(@AuthUser() authUser: AuthUserDto, @Query() dto: TimeBucketAssetDto): Promise<AssetResponseDto[]> {
     return this.service.getByTimeBucket(authUser, dto);
+  }
+
+  @Get('ids')
+  getAssetIds(@AuthUser() authUser: AuthUserDto, @Query() dto: DeviceIdDto) {
+    return this.service.getAssetIds(authUser, dto);
+  }
+
+  /**
+   * @deprecated use `getAssetIds`
+   */
+  @Get(':deviceId')
+  getUserAssetsByDeviceId(@AuthUser() authUser: AuthUserDto, @Param() dto: DeviceIdDto) {
+    return this.service.getAssetIds(authUser, dto);
   }
 
   @Post('jobs')

@@ -73,6 +73,7 @@ export interface IAssetRepository {
   getByIds(ids: string[]): Promise<AssetEntity[]>;
   getByAlbumId(pagination: PaginationOptions, albumId: string): Paginated<AssetEntity>;
   getByUserId(pagination: PaginationOptions, userId: string): Paginated<AssetEntity>;
+  getByDeviceId(ownerId: string, deviceId: string): Promise<string[]>;
   getWithout(pagination: PaginationOptions, property: WithoutProperty): Paginated<AssetEntity>;
   getWith(pagination: PaginationOptions, property: WithProperty): Paginated<AssetEntity>;
   getFirstAssetForAlbumId(albumId: string): Promise<AssetEntity | null>;

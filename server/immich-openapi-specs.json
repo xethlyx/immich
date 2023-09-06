@@ -1325,6 +1325,51 @@
         ]
       }
     },
+    "/asset/ids": {
+      "get": {
+        "operationId": "getAssetIds",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          },
+          {
+            "api_key": []
+          }
+        ],
+        "tags": [
+          "Asset"
+        ]
+      }
+    },
     "/asset/import": {
       "post": {
         "operationId": "importFile",
@@ -1974,7 +2019,6 @@
     },
     "/asset/{deviceId}": {
       "get": {
-        "description": "Get all asset of a device that are in the database, ID only.",
         "operationId": "getUserAssetsByDeviceId",
         "parameters": [
           {

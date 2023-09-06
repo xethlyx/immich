@@ -17,6 +17,7 @@ import {
   AssetJobName,
   AssetJobsDto,
   AssetStatsDto,
+  DeviceIdDto,
   DownloadArchiveInfo,
   DownloadInfoDto,
   DownloadResponseDto,
@@ -177,6 +178,10 @@ export class AssetService {
     await this.timeBucketChecks(authUser, dto);
     const assets = await this.assetRepository.getByTimeBucket(dto.timeBucket, dto);
     return assets.map(mapAsset);
+  }
+
+  getAssetIds(authUser: AuthUserDto, dto: DeviceIdDto) {
+    return this.assetRepository.getByDeviceId(authUser.id, dto.deviceId);
   }
 
   async downloadFile(authUser: AuthUserDto, id: string): Promise<ImmichReadStream> {

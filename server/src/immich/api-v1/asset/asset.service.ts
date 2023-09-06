@@ -177,10 +177,6 @@ export class AssetService {
     }
   }
 
-  public async getUserAssetsByDeviceId(authUser: AuthUserDto, deviceId: string) {
-    return this._assetRepository.getAllByDeviceId(authUser.id, deviceId);
-  }
-
   public async getAllAssets(authUser: AuthUserDto, dto: AssetSearchDto): Promise<AssetResponseDto[]> {
     const userId = dto.userId || authUser.id;
     await this.access.requirePermission(authUser, Permission.LIBRARY_READ, userId);

@@ -1,5 +1,5 @@
 import { IsBoolean, IsString } from 'class-validator';
-import { Optional } from '../../domain.util';
+import { Optional, ValidateUUID } from '../../domain.util';
 import { BulkIdsDto } from '../response-dto';
 
 export class AssetBulkUpdateDto extends BulkIdsDto {
@@ -24,4 +24,9 @@ export class UpdateAssetDto {
   @Optional()
   @IsString()
   description?: string;
+}
+
+export class DeviceIdDto {
+  @ValidateUUID()
+  deviceId!: string;
 }

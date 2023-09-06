@@ -85,6 +85,20 @@ export class AssetRepository implements IAssetRepository {
       },
     });
   }
+
+  async getByDeviceId(ownerId: string, deviceId: string): Promise<string[]> {
+    const assets = await this.repository.find({
+      select: { deviceAssetId: true },
+      where: {
+        ownerId,
+        deviceId,
+        isVisible: true,
+      },
+    });
+
+    return assets.map(({ deviceAssetId }) => deviceAssetId);
+  }
+
   async deleteAll(ownerId: string): Promise<void> {
     await this.repository.delete({ ownerId });
   }

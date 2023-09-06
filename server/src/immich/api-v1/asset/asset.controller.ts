@@ -28,7 +28,6 @@ import { CheckDuplicateAssetDto } from './dto/check-duplicate-asset.dto';
 import { CheckExistingAssetsDto } from './dto/check-existing-assets.dto';
 import { CreateAssetDto, ImportAssetDto } from './dto/create-asset.dto';
 import { DeleteAssetDto } from './dto/delete-asset.dto';
-import { DeviceIdDto } from './dto/device-id.dto';
 import { GetAssetThumbnailDto } from './dto/get-asset-thumbnail.dto';
 import { SearchAssetDto } from './dto/search-asset.dto';
 import { ServeFileDto } from './dto/serve-file.dto';
@@ -173,14 +172,6 @@ export class AssetController {
     @Query(new ValidationPipe({ transform: true })) dto: AssetSearchDto,
   ): Promise<AssetResponseDto[]> {
     return this.assetService.getAllAssets(authUser, dto);
-  }
-
-  /**
-   * Get all asset of a device that are in the database, ID only.
-   */
-  @Get('/:deviceId')
-  getUserAssetsByDeviceId(@AuthUser() authUser: AuthUserDto, @Param() { deviceId }: DeviceIdDto) {
-    return this.assetService.getUserAssetsByDeviceId(authUser, deviceId);
   }
 
   /**
