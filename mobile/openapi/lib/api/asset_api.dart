@@ -499,6 +499,58 @@ class AssetApi {
     return null;
   }
 
+  /// Performs an HTTP 'GET /asset/ids' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] deviceId (required):
+  Future<Response> getAssetIdsWithHttpInfo(String deviceId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/asset/ids';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'deviceId', deviceId));
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] deviceId (required):
+  Future<List<String>?> getAssetIds(String deviceId,) async {
+    final response = await getAssetIdsWithHttpInfo(deviceId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(responseBody, 'List<String>') as List)
+        .cast<String>()
+        .toList();
+
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /asset/search-terms' operation and returns the [Response].
   Future<Response> getAssetSearchTermsWithHttpInfo() async {
     // ignore: prefer_const_declarations
@@ -1122,10 +1174,7 @@ class AssetApi {
     return null;
   }
 
-  /// Get all asset of a device that are in the database, ID only.
-  ///
-  /// Note: This method returns the HTTP [Response].
-  ///
+  /// Performs an HTTP 'GET /asset/{deviceId}' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] deviceId (required):
@@ -1155,8 +1204,6 @@ class AssetApi {
     );
   }
 
-  /// Get all asset of a device that are in the database, ID only.
-  ///
   /// Parameters:
   ///
   /// * [String] deviceId (required):

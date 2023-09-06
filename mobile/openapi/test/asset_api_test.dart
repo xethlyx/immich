@@ -67,6 +67,11 @@ void main() {
       // TODO
     });
 
+    //Future<List<String>> getAssetIds(String deviceId) async
+    test('test getAssetIds', () async {
+      // TODO
+    });
+
     //Future<List<String>> getAssetSearchTerms() async
     test('test getAssetSearchTerms', () async {
       // TODO
@@ -117,8 +122,6 @@ void main() {
       // TODO
     });
 
-    // Get all asset of a device that are in the database, ID only.
-    //
     //Future<List<String>> getUserAssetsByDeviceId(String deviceId) async
     test('test getUserAssetsByDeviceId', () async {
       // TODO

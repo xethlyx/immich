@@ -95,6 +95,7 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**downloadFile**](doc//AssetApi.md#downloadfile) | **POST** /asset/download/{id} | 
 *AssetApi* | [**getAllAssets**](doc//AssetApi.md#getallassets) | **GET** /asset | 
 *AssetApi* | [**getAssetById**](doc//AssetApi.md#getassetbyid) | **GET** /asset/assetById/{id} | 
+*AssetApi* | [**getAssetIds**](doc//AssetApi.md#getassetids) | **GET** /asset/ids | 
 *AssetApi* | [**getAssetSearchTerms**](doc//AssetApi.md#getassetsearchterms) | **GET** /asset/search-terms | 
 *AssetApi* | [**getAssetStats**](doc//AssetApi.md#getassetstats) | **GET** /asset/statistics | 
 *AssetApi* | [**getAssetThumbnail**](doc//AssetApi.md#getassetthumbnail) | **GET** /asset/thumbnail/{id} | 
