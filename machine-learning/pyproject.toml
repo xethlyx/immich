@@ -91,7 +91,8 @@ module = [
     "torchvision.transforms",
     "aiocache.backends.memory",
     "aiocache.lock",
-    "aiocache.plugins"
+    "aiocache.plugins",
+    "faiss"
 ]
 ignore_missing_imports = true
 

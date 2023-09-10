@@ -1,13 +1,13 @@
 import asyncio
 import threading
 from concurrent.futures import ThreadPoolExecutor
-import numpy as np
 from typing import Any
 from zipfile import BadZipFile
 
 import faiss
+import numpy as np
 import orjson
-from fastapi import FastAPI, Form, HTTPException, UploadFile, Depends
+from fastapi import Depends, FastAPI, Form, HTTPException, UploadFile
 from fastapi.responses import ORJSONResponse
 from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf, NoSuchFile  # type: ignore
 from starlette.formparsers import MultiPartParser
