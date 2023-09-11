@@ -23,7 +23,7 @@ export class PersonService {
     @Inject(IPersonRepository) private repository: IPersonRepository,
     @Inject(IStorageRepository) private storageRepository: IStorageRepository,
     @Inject(IJobRepository) private jobRepository: IJobRepository,
-  ) {}
+  ) { }
 
   async getAll(authUser: AuthUserDto, dto: PersonSearchDto): Promise<PeopleResponseDto> {
     const people = await this.repository.getAllForUser(authUser.id, {
@@ -65,11 +65,11 @@ export class PersonService {
 
     if (dto.name !== undefined || dto.birthDate !== undefined || dto.isHidden !== undefined) {
       person = await this.repository.update({ id, name: dto.name, birthDate: dto.birthDate, isHidden: dto.isHidden });
-      if (this.needsSearchIndexUpdate(dto)) {
-        const assets = await this.repository.getAssets(authUser.id, id);
-        const ids = assets.map((asset) => asset.id);
-        await this.jobRepository.queue({ name: JobName.SEARCH_INDEX_ASSET, data: { ids } });
-      }
+      // if (this.needsSearchIndexUpdate(dto)) {
+      // const assets = await this.repository.getAssets(authUser.id, id);
+      // const ids = assets.map((asset) => asset.id);
+      // await this.jobRepository.queue({ name: JobName.SEARCH_INDEX_ASSET, data: { ids } });
+      // }
     }
 
     if (dto.featureFaceAssetId) {
@@ -152,10 +152,10 @@ export class PersonService {
         const mergeData: UpdateFacesData = { oldPersonId: mergeId, newPersonId: id };
         this.logger.log(`Merging ${mergeName} into ${primaryName}`);
 
-        const assetIds = await this.repository.prepareReassignFaces(mergeData);
-        for (const assetId of assetIds) {
-          await this.jobRepository.queue({ name: JobName.SEARCH_REMOVE_FACE, data: { assetId, personId: mergeId } });
-        }
+        // const assetIds = await this.repository.prepareReassignFaces(mergeData);
+        // for (const assetId of assetIds) {
+        //   await this.jobRepository.queue({ name: JobName.SEARCH_REMOVE_FACE, data: { assetId, personId: mergeId } });
+        // }
         await this.repository.reassignFaces(mergeData);
         await this.repository.delete(mergePerson);
 
@@ -168,7 +168,7 @@ export class PersonService {
     }
 
     // Re-index all faces in typesense for up-to-date search results
-    await this.jobRepository.queue({ name: JobName.SEARCH_INDEX_FACES });
+    // await this.jobRepository.queue({ name: JobName.SEARCH_INDEX_FACES });
 
     return results;
   }

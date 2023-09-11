@@ -74,17 +74,6 @@ export type JobItem =
   // Asset Deletion
   | { name: JobName.PERSON_CLEANUP; data?: IBaseJob }
 
-  // Search
-  | { name: JobName.SEARCH_INDEX_ASSETS; data?: IBaseJob }
-  | { name: JobName.SEARCH_INDEX_ASSET; data: IBulkEntityJob }
-  | { name: JobName.SEARCH_INDEX_FACES; data?: IBaseJob }
-  | { name: JobName.SEARCH_INDEX_FACE; data: IAssetFaceJob }
-  | { name: JobName.SEARCH_INDEX_ALBUMS; data?: IBaseJob }
-  | { name: JobName.SEARCH_INDEX_ALBUM; data: IBulkEntityJob }
-  | { name: JobName.SEARCH_REMOVE_ASSET; data: IBulkEntityJob }
-  | { name: JobName.SEARCH_REMOVE_ALBUM; data: IBulkEntityJob }
-  | { name: JobName.SEARCH_REMOVE_FACE; data: IAssetFaceJob };
-
 export type JobHandler<T = any> = (data: T) => boolean | Promise<boolean>;
 
 export const IJobRepository = 'IJobRepository';

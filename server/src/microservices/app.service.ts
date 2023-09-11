@@ -37,7 +37,7 @@ export class AppService {
     private systemConfigService: SystemConfigService,
     private userService: UserService,
     private auditService: AuditService,
-  ) {}
+  ) { }
 
   async init() {
     await this.jobService.registerHandlers({
@@ -49,15 +49,6 @@ export class AppService {
       [JobName.CLASSIFY_IMAGE]: (data) => this.smartInfoService.handleClassifyImage(data),
       [JobName.QUEUE_ENCODE_CLIP]: (data) => this.smartInfoService.handleQueueEncodeClip(data),
       [JobName.ENCODE_CLIP]: (data) => this.smartInfoService.handleEncodeClip(data),
-      [JobName.SEARCH_INDEX_ALBUMS]: () => this.searchService.handleIndexAlbums(),
-      [JobName.SEARCH_INDEX_ASSETS]: () => this.searchService.handleIndexAssets(),
-      [JobName.SEARCH_INDEX_FACES]: () => this.searchService.handleIndexFaces(),
-      [JobName.SEARCH_INDEX_ALBUM]: (data) => this.searchService.handleIndexAlbum(data),
-      [JobName.SEARCH_INDEX_ASSET]: (data) => this.searchService.handleIndexAsset(data),
-      [JobName.SEARCH_INDEX_FACE]: (data) => this.searchService.handleIndexFace(data),
-      [JobName.SEARCH_REMOVE_ALBUM]: (data) => this.searchService.handleRemoveAlbum(data),
-      [JobName.SEARCH_REMOVE_ASSET]: (data) => this.searchService.handleRemoveAsset(data),
-      [JobName.SEARCH_REMOVE_FACE]: (data) => this.searchService.handleRemoveFace(data),
       [JobName.STORAGE_TEMPLATE_MIGRATION]: () => this.storageTemplateService.handleMigration(),
       [JobName.STORAGE_TEMPLATE_MIGRATION_SINGLE]: (data) => this.storageTemplateService.handleMigrationSingle(data),
       [JobName.SYSTEM_CONFIG_CHANGE]: () => this.systemConfigService.refreshConfig(),
@@ -90,6 +81,5 @@ export class AppService {
     });
 
     await this.metadataProcessor.init();
-    await this.searchService.init();
   }
 }

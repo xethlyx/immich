@@ -2,7 +2,7 @@ import asyncio
 from functools import partial
 import threading
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable
+from typing import Any, Callable, Type
 from zipfile import BadZipFile
 
 import faiss
@@ -28,7 +28,23 @@ app = FastAPI()
 vector_stores: dict[str, faiss.IndexIDMap2] = {}
 
 
-def validate_embeddings(embeddings: list[float] | np.ndarray[int, np.dtype[Any]]) -> np.ndarray[int, np.dtype[Any]]:
+class VectorStore:
+    def __init__(self, dims: int, index_cls: Type[faiss.Index] = faiss.IndexHNSWFlat, **kwargs: Any) -> None:
+        self.index = index_cls(dims, **kwargs)
+        self.id_to_key: dict[int, Any] = {}
+
+    def search(self, embeddings: np.ndarray[int, np.dtype[Any]], k: int) -> list[Any]:
+        ids = self.index.assign(embeddings, k)  # type: ignore
+        return [self.id_to_key[idx] for row in ids.tolist() for idx in row if not idx == -1]
+
+    def add_with_ids(self, embeddings: np.ndarray[int, np.dtype[Any]], embedding_ids: list[Any]) -> None:
+        self.id_to_key |= {
+            id: key for id, key in zip(embedding_ids, range(self.index.ntotal, self.index.ntotal + len(embedding_ids)))
+        }
+        self.index.add(embeddings)  # type: ignore
+
+
+def validate_embeddings(embeddings: list[float]) -> Any:
     embeddings = np.array(embeddings)
     if len(embeddings.shape) == 1:
         embeddings = np.expand_dims(embeddings, 0)
@@ -91,14 +107,19 @@ async def pipeline(
     except orjson.JSONDecodeError:
         raise HTTPException(400, f"Invalid options JSON: {options}")
 
-    outputs = await run(_predict, model_name, model_type, inputs, **kwargs)
+    outputs = await _predict(model_name, model_type, inputs, **kwargs)
     if index_name is not None:
         if k is not None:
             if k < 1:
                 raise HTTPException(400, f"k must be a positive integer; got {k}")
-            outputs = await run(_search, index_name, outputs, k)
+            if index_name not in vector_stores:
+                raise HTTPException(404, f"Index '{index_name}' not found")
+            outputs = await run(vector_stores[index_name].search, outputs, k)
         if embedding_id is not None:
-            await run(_add, index_name, [embedding_id], outputs)
+            if index_name not in vector_stores:
+                await create(index_name, [embedding_id], outputs)
+            else:
+                await run(vector_stores[index_name].add, [embedding_id], outputs)
     return ORJSONResponse(outputs)
 
 
@@ -121,17 +142,15 @@ async def predict(
     except orjson.JSONDecodeError:
         raise HTTPException(400, f"Invalid options JSON: {options}")
 
-    outputs = await run(_predict, model_name, model_type, inputs, **kwargs)
+    outputs = await _predict(model_name, model_type, inputs, **kwargs)
     return ORJSONResponse(outputs)
 
 
 @app.post("/index/{index_name}/search", response_class=ORJSONResponse)
-async def search(
-    index_name: str, embeddings: np.ndarray[int, np.dtype[np.float32]] = Depends(validate_embeddings), k: int = 10
-) -> ORJSONResponse:
+async def search(index_name: str, embeddings: Any = Depends(validate_embeddings), k: int = 10) -> ORJSONResponse:
     if index_name not in vector_stores or vector_stores[index_name].d != embeddings.shape[1]:
         raise HTTPException(404, f"Index '{index_name}' not found")
-    outputs: np.ndarray[int, np.dtype[Any]] = await run(_search, index_name, embeddings, k)
+    outputs: np.ndarray[int, np.dtype[Any]] = await run(vector_stores[index_name].search, embeddings, k)
     return ORJSONResponse(outputs)
 
 
@@ -139,19 +158,19 @@ async def search(
 async def add(
     index_name: str,
     embedding_ids: list[str],
-    embeddings: np.ndarray[int, np.dtype[np.float32]] = Depends(validate_embeddings),
+    embeddings: Any = Depends(validate_embeddings),
 ) -> None:
     if index_name not in vector_stores or vector_stores[index_name].d != embeddings.shape[1]:
         await create(index_name, embedding_ids, embeddings)
     else:
-        await run(_add, index_name, embedding_ids, embeddings)
+        await run(vector_stores[index_name].add_with_ids, embeddings, embedding_ids)
 
 
 @app.post("/index/{index_name}/create")
 async def create(
     index_name: str,
     embedding_ids: list[str],
-    embeddings: np.ndarray[int, np.dtype[np.float32]] = Depends(validate_embeddings),
+    embeddings: Any = Depends(validate_embeddings),
 ) -> None:
     if embeddings.shape[0] != len(embedding_ids):
         raise HTTPException(400, "Number of embedding IDs must match number of embeddings")
@@ -169,7 +188,7 @@ async def run(func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
     return await asyncio.get_running_loop().run_in_executor(app.state.thread_pool, func, *args)
 
 
-async def _load(model: InferenceModel) -> InferenceModel:
+def _load(model: InferenceModel) -> InferenceModel:
     if model.loaded:
         return model
 
@@ -189,31 +208,22 @@ async def _load(model: InferenceModel) -> InferenceModel:
     return model
 
 
-async def _add(index_name: str, embedding_ids: list[str], embeddings: np.ndarray[int, np.dtype[np.float32]]) -> None:
-    return await vector_stores[index_name].add_with_ids(embeddings, embedding_ids)  # type: ignore
-
-
-async def _search(
-    index_name: str, embeddings: np.ndarray[int, np.dtype[np.float32]], k: int
-) -> np.ndarray[int, np.dtype[Any]]:
-    return await vector_stores[index_name].assign(embeddings, k)  # type: ignore
-
-
 async def _predict(
     model_name: str, model_type: ModelType, inputs: Any, **options: Any
 ) -> np.ndarray[int, np.dtype[np.float32]]:
-    model = await _load(await app.state.model_cache.get(model_name, model_type, **options))
+    model = await app.state.model_cache.get(model_name, model_type, **options)
+    if not model.loaded:
+        await run(_load, model)
     model.configure(**options)
     return await run(model.predict, inputs)
 
 
-async def _create(
+def _create(
     embedding_ids: list[str],
     embeddings: np.ndarray[int, np.dtype[np.float32]],
-) -> faiss.IndexIDMap2:
-    hnsw_index = faiss.IndexHNSWFlat(embeddings.shape[1])
-    mapped_index = faiss.IndexIDMap2(hnsw_index)
+) -> VectorStore:
+    index = VectorStore(embeddings.shape[1])
 
     with app.state.index_lock:
-        mapped_index.add_with_ids(embeddings, embedding_ids)  # type: ignore
-    return mapped_index
+        index.add_with_ids(embeddings, embedding_ids)  # type: ignore
+    return index

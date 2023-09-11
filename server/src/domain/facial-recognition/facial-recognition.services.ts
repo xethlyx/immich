@@ -6,7 +6,7 @@ import { IBaseJob, IEntityJob, IFaceThumbnailJob, IJobRepository, JOBS_ASSET_PAG
 import { CropOptions, FACE_THUMBNAIL_SIZE, IMediaRepository } from '../media';
 import { IPersonRepository } from '../person/person.repository';
 import { ISearchRepository } from '../search/search.repository';
-import { IMachineLearningRepository } from '../smart-info';
+import { DetectFaceResult, IMachineLearningRepository } from '../smart-info';
 import { IStorageRepository, StorageCore, StorageFolder } from '../storage';
 import { ISystemConfigRepository, SystemConfigCore } from '../system-config';
 import { AssetFaceId, IFaceRepository } from './face.repository';
@@ -71,8 +71,8 @@ export class FacialRecognitionService {
     const faces = await this.machineLearning.detectFaces(
       machineLearning.url,
       { imagePath: asset.resizePath },
-      machineLearning.facialRecognition,
-    );
+      { ...machineLearning.facialRecognition, index_name: `${asset.ownerId}-${JobName.RECOGNIZE_FACES}`, embedding_id: asset.id },
+    ) as DetectFaceResult[];
 
     this.logger.debug(`${faces.length} faces detected in ${asset.resizePath}`);
     this.logger.verbose(faces.map((face) => ({ ...face, embedding: `float[${face.embedding.length}]` })));
@@ -111,7 +111,7 @@ export class FacialRecognitionService {
         boundingBoxY1: rest.boundingBox.y1,
         boundingBoxY2: rest.boundingBox.y2,
       });
-      await this.jobRepository.queue({ name: JobName.SEARCH_INDEX_FACE, data: faceId });
+      // await this.jobRepository.queue({ name: JobName.SEARCH_INDEX_FACE, data: faceId });
     }
 
     return true;

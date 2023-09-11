@@ -97,8 +97,8 @@ export class SmartInfoService {
     const clipEmbedding = await this.machineLearning.encodeImage(
       machineLearning.url,
       { imagePath: asset.resizePath },
-      machineLearning.clip,
-    );
+      { ...machineLearning.clip, index_name: `${asset.ownerId}-${JobName.ENCODE_CLIP}`, embedding_id: asset.id },
+    ) as number[];
 
     await this.repository.upsert({ assetId: asset.id, clipEmbedding: clipEmbedding });
 

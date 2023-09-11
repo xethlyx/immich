@@ -289,7 +289,7 @@ export class AssetService {
     }
 
     const asset = await this.assetRepository.save({ id, ...rest });
-    await this.jobRepository.queue({ name: JobName.SEARCH_INDEX_ASSET, data: { ids: [id] } });
+    // await this.jobRepository.queue({ name: JobName.SEARCH_INDEX_ASSET, data: { ids: [id] } });
     return mapAsset(asset);
   }
 

@@ -17,11 +17,11 @@ import { readFile } from 'fs/promises';
 export class MachineLearningRepository implements IMachineLearningRepository {
   private async post<T>(url: string, input: TextModelInput | VisionModelInput, config: ModelConfig): Promise<T> {
     const formData = await this.getFormData(input, config);
-    const res = await fetch(`${url}/predict`, { method: 'POST', body: formData });
+    const res = await fetch(`${url}/pipeline`, { method: 'POST', body: formData });
     if (res.status >= 400) {
       throw new Error(
         `Request ${config.modelType ? `for ${config.modelType.replace('-', ' ')} ` : ''}` +
-          `failed with status ${res.status}: ${res.statusText}`,
+        `failed with status ${res.status}: ${res.statusText}`,
       );
     }
     return res.json();
@@ -31,11 +31,11 @@ export class MachineLearningRepository implements IMachineLearningRepository {
     return this.post<string[]>(url, input, { ...config, modelType: ModelType.IMAGE_CLASSIFICATION });
   }
 
-  detectFaces(url: string, input: VisionModelInput, config: RecognitionConfig): Promise<DetectFaceResult[]> {
+  detectFaces(url: string, input: VisionModelInput, config: RecognitionConfig): Promise<DetectFaceResult[] | string[]> {
     return this.post<DetectFaceResult[]>(url, input, { ...config, modelType: ModelType.FACIAL_RECOGNITION });
   }
 
-  encodeImage(url: string, input: VisionModelInput, config: CLIPConfig): Promise<number[]> {
+  encodeImage(url: string, input: VisionModelInput, config: CLIPConfig): Promise<number[] | string[]> {
     return this.post<number[]>(url, input, {
       ...config,
       modelType: ModelType.CLIP,
@@ -43,7 +43,7 @@ export class MachineLearningRepository implements IMachineLearningRepository {
     } as CLIPConfig);
   }
 
-  encodeText(url: string, input: TextModelInput, config: CLIPConfig): Promise<number[]> {
+  encodeText(url: string, input: TextModelInput, config: CLIPConfig): Promise<number[] | string[]> {
     return this.post<number[]>(url, input, { ...config, modelType: ModelType.CLIP, mode: CLIPMode.TEXT } as CLIPConfig);
   }
 
@@ -67,6 +67,16 @@ export class MachineLearningRepository implements IMachineLearningRepository {
       formData.append('text', input.text);
     } else {
       throw new Error('Invalid input');
+    }
+
+    if (config.index_name) {
+      formData.append('index_name', config.index_name);
+    }
+    if (config.embedding_id) {
+      formData.append('embedding_id', config.embedding_id);
+    }
+    if (config.k) {
+      formData.append('k', config.k.toString());
     }
 
     return formData;

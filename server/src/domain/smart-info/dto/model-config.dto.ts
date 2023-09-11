@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
 import { Optional } from '../../domain.util';
 import { CLIPMode, ModelType } from '../machine-learning.interface';
 
@@ -16,6 +16,21 @@ export class ModelConfig {
   @Optional()
   @ApiProperty({ enumName: 'ModelType', enum: ModelType })
   modelType?: ModelType;
+
+  @IsString()
+  @IsNotEmpty()
+  @Optional()
+  index_name?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Optional()
+  embedding_id?: string;
+
+  @IsInt()
+  @Min(1)
+  @Optional()
+  k?: number;
 }
 
 export class ClassificationConfig extends ModelConfig {

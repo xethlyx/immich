@@ -11,7 +11,7 @@ export class AppService {
     private searchService: SearchService,
     private storageService: StorageService,
     private serverService: ServerInfoService,
-  ) {}
+  ) { }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async onNightlyJob() {
@@ -20,11 +20,6 @@ export class AppService {
 
   async init() {
     this.storageService.init();
-    await this.searchService.init();
     this.logger.log(`Feature Flags: ${JSON.stringify(await this.serverService.getFeatures(), null, 2)}`);
-  }
-
-  async destroy() {
-    this.searchService.teardown();
   }
 }

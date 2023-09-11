@@ -52,9 +52,7 @@ const providers: Provider[] = [
 
 @Global()
 @Module({})
-export class DomainModule implements OnApplicationShutdown {
-  constructor(private searchService: SearchService) {}
-
+export class DomainModule {
   static register(options: Pick<ModuleMetadata, 'imports'>): DynamicModule {
     return {
       module: DomainModule,
@@ -62,9 +60,5 @@ export class DomainModule implements OnApplicationShutdown {
       providers: [...providers],
       exports: [...providers],
     };
-  }
-
-  onApplicationShutdown() {
-    this.searchService.teardown();
   }
 }

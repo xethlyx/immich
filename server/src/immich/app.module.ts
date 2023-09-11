@@ -66,14 +66,10 @@ import {
     FileUploadInterceptor,
   ],
 })
-export class AppModule implements OnModuleInit, OnModuleDestroy {
-  constructor(private appService: AppService) {}
+export class AppModule implements OnModuleInit {
+  constructor(private appService: AppService) { }
 
   async onModuleInit() {
     await this.appService.init();
-  }
-
-  onModuleDestroy() {
-    this.appService.destroy();
   }
 }

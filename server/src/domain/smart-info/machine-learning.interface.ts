@@ -38,7 +38,7 @@ export enum CLIPMode {
 
 export interface IMachineLearningRepository {
   classifyImage(url: string, input: VisionModelInput, config: ClassificationConfig): Promise<string[]>;
-  encodeImage(url: string, input: VisionModelInput, config: CLIPConfig): Promise<number[]>;
-  encodeText(url: string, input: TextModelInput, config: CLIPConfig): Promise<number[]>;
-  detectFaces(url: string, input: VisionModelInput, config: RecognitionConfig): Promise<DetectFaceResult[]>;
+  encodeImage(url: string, input: VisionModelInput, config: CLIPConfig): Promise<number[] | string[]>;
+  encodeText(url: string, input: TextModelInput, config: CLIPConfig): Promise<number[] | string[]>;
+  detectFaces(url: string, input: VisionModelInput, config: RecognitionConfig): Promise<DetectFaceResult[] | string[]>;
 }
