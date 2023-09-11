@@ -14,8 +14,8 @@ const port = Number(process.env.SERVER_PORT) || 3001;
 const isDev = process.env.NODE_ENV === 'development';
 
 export async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: getLogLevels() });
-
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: getLogLevels(), forceCloseConnections: true });
+  app.enableShutdownHooks();
   app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
   app.set('etag', 'strong');
   app.use(cookieParser());

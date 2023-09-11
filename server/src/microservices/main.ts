@@ -10,8 +10,8 @@ const port = Number(process.env.MICROSERVICES_PORT) || 3002;
 const envName = (process.env.NODE_ENV || 'development').toUpperCase();
 
 export async function bootstrap() {
-  const app = await NestFactory.create(MicroservicesModule, { logger: getLogLevels() });
-
+  const app = await NestFactory.create(MicroservicesModule, { logger: getLogLevels(), forceCloseConnections: true });
+  app.enableShutdownHooks();
   app.useWebSocketAdapter(new RedisIoAdapter(app));
 
   await app.get(AppService).init();
