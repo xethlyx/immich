@@ -102,7 +102,7 @@ class CLIPEncoder(InferenceModel):
             case _:
                 raise TypeError(f"Expected Image or str, but got: {type(image_or_text)}")
 
-        return outputs[0][0].tolist()
+        return outputs[0][0]
 
     def _get_jina_model_name(self, model_name: str) -> str:
         if model_name in _MODELS:
