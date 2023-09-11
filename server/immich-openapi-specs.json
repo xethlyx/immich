@@ -5412,8 +5412,17 @@
       },
       "CLIPConfig": {
         "properties": {
+          "embedding_id": {
+            "type": "string"
+          },
           "enabled": {
             "type": "boolean"
+          },
+          "index_name": {
+            "type": "string"
+          },
+          "k": {
+            "type": "number"
           },
           "mode": {
             "$ref": "#/components/schemas/CLIPMode"
@@ -5526,8 +5535,17 @@
       },
       "ClassificationConfig": {
         "properties": {
+          "embedding_id": {
+            "type": "string"
+          },
           "enabled": {
             "type": "boolean"
+          },
+          "index_name": {
+            "type": "string"
+          },
+          "k": {
+            "type": "number"
           },
           "minScore": {
             "type": "integer"
@@ -6465,8 +6483,17 @@
       },
       "RecognitionConfig": {
         "properties": {
+          "embedding_id": {
+            "type": "string"
+          },
           "enabled": {
             "type": "boolean"
+          },
+          "index_name": {
+            "type": "string"
+          },
+          "k": {
+            "type": "number"
           },
           "maxDistance": {
             "type": "integer"

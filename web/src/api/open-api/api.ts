@@ -876,10 +876,28 @@ export interface BulkIdsDto {
 export interface CLIPConfig {
     /**
      * 
+     * @type {string}
+     * @memberof CLIPConfig
+     */
+    'embedding_id'?: string;
+    /**
+     * 
      * @type {boolean}
      * @memberof CLIPConfig
      */
     'enabled': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof CLIPConfig
+     */
+    'index_name'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CLIPConfig
+     */
+    'k'?: number;
     /**
      * 
      * @type {CLIPMode}
@@ -1027,10 +1045,28 @@ export interface CheckExistingAssetsResponseDto {
 export interface ClassificationConfig {
     /**
      * 
+     * @type {string}
+     * @memberof ClassificationConfig
+     */
+    'embedding_id'?: string;
+    /**
+     * 
      * @type {boolean}
      * @memberof ClassificationConfig
      */
     'enabled': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClassificationConfig
+     */
+    'index_name'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ClassificationConfig
+     */
+    'k'?: number;
     /**
      * 
      * @type {number}
@@ -2142,10 +2178,28 @@ export interface QueueStatusDto {
 export interface RecognitionConfig {
     /**
      * 
+     * @type {string}
+     * @memberof RecognitionConfig
+     */
+    'embedding_id'?: string;
+    /**
+     * 
      * @type {boolean}
      * @memberof RecognitionConfig
      */
     'enabled': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecognitionConfig
+     */
+    'index_name'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecognitionConfig
+     */
+    'k'?: number;
     /**
      * 
      * @type {number}

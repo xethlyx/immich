@@ -13,13 +13,40 @@ part of openapi.api;
 class CLIPConfig {
   /// Returns a new [CLIPConfig] instance.
   CLIPConfig({
+    this.embeddingId,
     required this.enabled,
+    this.indexName,
+    this.k,
     this.mode,
     required this.modelName,
     this.modelType,
   });
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? embeddingId;
+
   bool enabled;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? indexName;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? k;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -41,7 +68,10 @@ class CLIPConfig {
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is CLIPConfig &&
+     other.embeddingId == embeddingId &&
      other.enabled == enabled &&
+     other.indexName == indexName &&
+     other.k == k &&
      other.mode == mode &&
      other.modelName == modelName &&
      other.modelType == modelType;
@@ -49,17 +79,35 @@ class CLIPConfig {
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
+    (embeddingId == null ? 0 : embeddingId!.hashCode) +
     (enabled.hashCode) +
+    (indexName == null ? 0 : indexName!.hashCode) +
+    (k == null ? 0 : k!.hashCode) +
     (mode == null ? 0 : mode!.hashCode) +
     (modelName.hashCode) +
     (modelType == null ? 0 : modelType!.hashCode);
 
   @override
-  String toString() => 'CLIPConfig[enabled=$enabled, mode=$mode, modelName=$modelName, modelType=$modelType]';
+  String toString() => 'CLIPConfig[embeddingId=$embeddingId, enabled=$enabled, indexName=$indexName, k=$k, mode=$mode, modelName=$modelName, modelType=$modelType]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.embeddingId != null) {
+      json[r'embedding_id'] = this.embeddingId;
+    } else {
+    //  json[r'embedding_id'] = null;
+    }
       json[r'enabled'] = this.enabled;
+    if (this.indexName != null) {
+      json[r'index_name'] = this.indexName;
+    } else {
+    //  json[r'index_name'] = null;
+    }
+    if (this.k != null) {
+      json[r'k'] = this.k;
+    } else {
+    //  json[r'k'] = null;
+    }
     if (this.mode != null) {
       json[r'mode'] = this.mode;
     } else {
@@ -82,7 +130,12 @@ class CLIPConfig {
       final json = value.cast<String, dynamic>();
 
       return CLIPConfig(
+        embeddingId: mapValueOfType<String>(json, r'embedding_id'),
         enabled: mapValueOfType<bool>(json, r'enabled')!,
+        indexName: mapValueOfType<String>(json, r'index_name'),
+        k: json[r'k'] == null
+            ? null
+            : num.parse(json[r'k'].toString()),
         mode: CLIPMode.fromJson(json[r'mode']),
         modelName: mapValueOfType<String>(json, r'modelName')!,
         modelType: ModelType.fromJson(json[r'modelType']),

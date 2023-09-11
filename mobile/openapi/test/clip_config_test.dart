@@ -16,8 +16,23 @@ void main() {
   // final instance = CLIPConfig();
 
   group('test CLIPConfig', () {
+    // String embeddingId
+    test('to test the property `embeddingId`', () async {
+      // TODO
+    });
+
     // bool enabled
     test('to test the property `enabled`', () async {
+      // TODO
+    });
+
+    // String indexName
+    test('to test the property `indexName`', () async {
+      // TODO
+    });
+
+    // num k
+    test('to test the property `k`', () async {
       // TODO
     });
 

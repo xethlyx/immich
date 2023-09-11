@@ -8,7 +8,10 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**embeddingId** | **String** |  | [optional] 
 **enabled** | **bool** |  | 
+**indexName** | **String** |  | [optional] 
+**k** | **num** |  | [optional] 
 **maxDistance** | **int** |  | 
 **minScore** | **int** |  | 
 **modelName** | **String** |  | 

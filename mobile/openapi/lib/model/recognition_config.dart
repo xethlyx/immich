@@ -13,14 +13,41 @@ part of openapi.api;
 class RecognitionConfig {
   /// Returns a new [RecognitionConfig] instance.
   RecognitionConfig({
+    this.embeddingId,
     required this.enabled,
+    this.indexName,
+    this.k,
     required this.maxDistance,
     required this.minScore,
     required this.modelName,
     this.modelType,
   });
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? embeddingId;
+
   bool enabled;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? indexName;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? k;
 
   int maxDistance;
 
@@ -38,7 +65,10 @@ class RecognitionConfig {
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is RecognitionConfig &&
+     other.embeddingId == embeddingId &&
      other.enabled == enabled &&
+     other.indexName == indexName &&
+     other.k == k &&
      other.maxDistance == maxDistance &&
      other.minScore == minScore &&
      other.modelName == modelName &&
@@ -47,18 +77,36 @@ class RecognitionConfig {
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
+    (embeddingId == null ? 0 : embeddingId!.hashCode) +
     (enabled.hashCode) +
+    (indexName == null ? 0 : indexName!.hashCode) +
+    (k == null ? 0 : k!.hashCode) +
     (maxDistance.hashCode) +
     (minScore.hashCode) +
     (modelName.hashCode) +
     (modelType == null ? 0 : modelType!.hashCode);
 
   @override
-  String toString() => 'RecognitionConfig[enabled=$enabled, maxDistance=$maxDistance, minScore=$minScore, modelName=$modelName, modelType=$modelType]';
+  String toString() => 'RecognitionConfig[embeddingId=$embeddingId, enabled=$enabled, indexName=$indexName, k=$k, maxDistance=$maxDistance, minScore=$minScore, modelName=$modelName, modelType=$modelType]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.embeddingId != null) {
+      json[r'embedding_id'] = this.embeddingId;
+    } else {
+    //  json[r'embedding_id'] = null;
+    }
       json[r'enabled'] = this.enabled;
+    if (this.indexName != null) {
+      json[r'index_name'] = this.indexName;
+    } else {
+    //  json[r'index_name'] = null;
+    }
+    if (this.k != null) {
+      json[r'k'] = this.k;
+    } else {
+    //  json[r'k'] = null;
+    }
       json[r'maxDistance'] = this.maxDistance;
       json[r'minScore'] = this.minScore;
       json[r'modelName'] = this.modelName;
@@ -78,7 +126,12 @@ class RecognitionConfig {
       final json = value.cast<String, dynamic>();
 
       return RecognitionConfig(
+        embeddingId: mapValueOfType<String>(json, r'embedding_id'),
         enabled: mapValueOfType<bool>(json, r'enabled')!,
+        indexName: mapValueOfType<String>(json, r'index_name'),
+        k: json[r'k'] == null
+            ? null
+            : num.parse(json[r'k'].toString()),
         maxDistance: mapValueOfType<int>(json, r'maxDistance')!,
         minScore: mapValueOfType<int>(json, r'minScore')!,
         modelName: mapValueOfType<String>(json, r'modelName')!,
