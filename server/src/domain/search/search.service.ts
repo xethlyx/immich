@@ -1,23 +1,15 @@
 import { AlbumEntity, AssetEntity, AssetFaceEntity } from '@app/infra/entities';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { mapAlbumWithAssets } from '../album';
-import { IAlbumRepository } from '../album/album.repository';
 import { AssetResponseDto, mapAsset } from '../asset';
 import { IAssetRepository } from '../asset/asset.repository';
 import { AuthUserDto } from '../auth';
-import { usePagination } from '../domain.util';
-import { AssetFaceId, IFaceRepository } from '../facial-recognition';
-import { IAssetFaceJob, IBulkEntityJob, IJobRepository, JOBS_ASSET_PAGINATION_SIZE, JobName } from '../job';
+import { JobName } from '../job';
 import { IMachineLearningRepository } from '../smart-info';
 import { FeatureFlag, ISystemConfigRepository, SystemConfigCore } from '../system-config';
 import { SearchDto } from './dto';
 import { SearchResponseDto } from './response-dto';
 import {
-  ISearchRepository,
-  OwnedFaceEntity,
-  SearchCollection,
   SearchExploreItem,
-  SearchResult,
   SearchStrategy,
 } from './search.repository';
 

@@ -56,7 +56,7 @@ log_settings = LogSettings()
 
 class CustomRichHandler(RichHandler):
     def __init__(self) -> None:
-        console = Console(no_color=log_settings.no_color, force_interactive=True, stderr=True)
+        console = Console(no_color=log_settings.no_color)
         super().__init__(
             show_path=False,
             omit_repeated_times=False,
