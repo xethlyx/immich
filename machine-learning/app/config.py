@@ -2,12 +2,9 @@ import logging
 import os
 from pathlib import Path
 
-import gunicorn
-import starlette
 from pydantic import BaseSettings
 from rich.console import Console
 from rich.logging import RichHandler
-
 from .schemas import ModelType
 
 
@@ -59,9 +56,12 @@ log_settings = LogSettings()
 
 class CustomRichHandler(RichHandler):
     def __init__(self) -> None:
-        console = Console(color_system="standard", no_color=log_settings.no_color)
+        console = Console(no_color=log_settings.no_color, force_interactive=True, stderr=True)
         super().__init__(
-            show_path=False, omit_repeated_times=False, console=console, tracebacks_suppress=[gunicorn, starlette]
+            show_path=False,
+            omit_repeated_times=False,
+            console=console,
+            tracebacks_width=100,
         )
 
 
