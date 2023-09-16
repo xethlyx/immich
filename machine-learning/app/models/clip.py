@@ -9,6 +9,7 @@ from clip_server.model.clip import BICUBIC, _convert_image_to_rgb
 from clip_server.model.clip_onnx import _MODELS, _S3_BUCKET_V2, CLIPOnnxModel, download_model
 from clip_server.model.pretrained_models import _VISUAL_MODEL_IMAGE_SIZE
 from clip_server.model.tokenization import Tokenizer
+import faiss
 from PIL import Image
 from torchvision.transforms import CenterCrop, Compose, Normalize, Resize, ToTensor
 
@@ -89,7 +90,7 @@ class CLIPEncoder(InferenceModel):
                 pixel_values = self.transform(image_or_text)
                 assert isinstance(pixel_values, torch.Tensor)
                 pixel_values = torch.unsqueeze(pixel_values, 0).numpy()
-                outputs = self.vision_model.run(self.vision_outputs, {"pixel_values": pixel_values})
+                outputs = self.vision_model.run(self.vision_outputs, {"pixel_values": pixel_values})[0]
             case str():
                 if self.mode == "vision":
                     raise TypeError("Cannot encode text as vision-only model")
@@ -98,11 +99,11 @@ class CLIPEncoder(InferenceModel):
                     "input_ids": text_inputs["input_ids"].int().numpy(),
                     "attention_mask": text_inputs["attention_mask"].int().numpy(),
                 }
-                outputs = self.text_model.run(self.text_outputs, inputs)
+                outputs = self.text_model.run(self.text_outputs, inputs)[0]
             case _:
                 raise TypeError(f"Expected Image or str, but got: {type(image_or_text)}")
-
-        return outputs[0][0]
+        faiss.normalize_L2(outputs)
+        return outputs[0]
 
     def _get_jina_model_name(self, model_name: str) -> str:
         if model_name in _MODELS:

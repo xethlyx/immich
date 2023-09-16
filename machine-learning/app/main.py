@@ -29,19 +29,19 @@ app = FastAPI()
 
 
 class VectorStore:
-    def __init__(self, dims: int, index: str = "HNSW") -> None:
-        self.index = faiss.index_factory(dims, index)
+    def __init__(self, dims: int, index: Type[faiss.Index] = faiss.IndexHNSWFlat) -> None:
+        self.index = index(dims, 32, faiss.METRIC_INNER_PRODUCT)
         self.key_to_id: dict[int, Any] = {}
 
     def search(self, embeddings: np.ndarray[int, np.dtype[Any]], k: int) -> list[Any]:
-        keys: np.ndarray[int, np.dtype[np.int64]] = self.index.assign(embeddings, k)
+        keys: np.ndarray[int, np.dtype[np.int64]] = self.index.assign(embeddings, k)  # type: ignore
         return [self.key_to_id[idx] for row in keys.tolist() for idx in row if not idx == -1]
 
     def add_with_ids(self, embeddings: np.ndarray[int, np.dtype[Any]], embedding_ids: list[Any]) -> None:
-        self.key_to_id |= {
-            key: id for key, id in zip(range(self.index.ntotal, self.index.ntotal + len(embedding_ids)), embedding_ids)
-        }
+        cur_total = self.index.ntotal
         self.index.add(embeddings)  # type: ignore
+        new_total = self.index.ntotal
+        self.key_to_id |= {key: id for key, id in zip(range(cur_total, new_total), embedding_ids)}
 
     @property
     def dims(self) -> int:
@@ -52,14 +52,29 @@ vector_stores: dict[str, VectorStore] = {}
 
 
 def validate_embeddings(embeddings: list[float]) -> Any:
-    embeddings = np.array(embeddings)
-    if len(embeddings.shape) == 1:
-        embeddings = np.expand_dims(embeddings, 0)
-    elif len(embeddings.shape) != 2:
-        raise HTTPException(400, f"Expected one or two axes for embeddings; got {len(embeddings.shape)}")
-    if embeddings.shape[1] < 10:
-        raise HTTPException(400, f"Dimension size must be at least 10; got {embeddings.shape[1]}")
-    return embeddings
+    np_embeddings = np.array(embeddings)
+    if len(np_embeddings.shape) == 1:
+        np_embeddings = np.expand_dims(np_embeddings, 0)
+    elif len(np_embeddings.shape) != 2:
+        raise HTTPException(400, f"Expected one or two axes for embeddings; got {len(np_embeddings.shape)}")
+    if np_embeddings.shape[1] < 10:
+        raise HTTPException(400, f"Dimension size must be at least 10; got {np_embeddings.shape[1]}")
+    return np_embeddings
+
+
+async def validate_payload(image: UploadFile | None, text: str | None, options: str) -> tuple[str | bytes, dict[str, Any]]:
+    if image is not None:
+        inputs: str | bytes = await image.read()
+    elif text is not None:
+        inputs = text
+    else:
+        raise HTTPException(400, "Either image or text must be provided")
+    try:
+        kwargs = orjson.loads(options)
+    except orjson.JSONDecodeError:
+        raise HTTPException(400, f"Invalid options JSON: {options}")
+
+    return inputs, kwargs
 
 
 def init_state() -> None:
@@ -103,18 +118,9 @@ async def pipeline(
     embedding_id: str | None = Form(default=None),
     k: int | None = Form(default=None),
 ) -> ORJSONResponse:
-    if image is not None:
-        inputs: str | bytes = await image.read()
-    elif text is not None:
-        inputs = text
-    else:
-        raise HTTPException(400, "Either image or text must be provided")
-    try:
-        kwargs = orjson.loads(options)
-    except orjson.JSONDecodeError:
-        raise HTTPException(400, f"Invalid options JSON: {options}")
-
-    outputs = await _predict(model_name, model_type, inputs, **kwargs)
+    inputs, kwargs = await validate_payload(image, text, options)
+    model = await app.state.model_cache.get(model_name, model_type, **kwargs)
+    outputs = await run(_predict, model, inputs, **kwargs)
     if index_name is not None:
         expanded = np.expand_dims(outputs, 0)
         if k is not None:
@@ -139,18 +145,9 @@ async def predict(
     text: str | None = Form(default=None),
     image: UploadFile | None = None,
 ) -> ORJSONResponse:
-    if image is not None:
-        inputs: str | bytes = await image.read()
-    elif text is not None:
-        inputs = text
-    else:
-        raise HTTPException(400, "Either image or text must be provided")
-    try:
-        kwargs = orjson.loads(options)
-    except orjson.JSONDecodeError:
-        raise HTTPException(400, f"Invalid options JSON: {options}")
-
-    outputs = await _predict(model_name, model_type, inputs, **kwargs)
+    inputs, kwargs = await validate_payload(image, text, options)
+    model = await app.state.model_cache.get(model_name, model_type, **kwargs)
+    outputs = await run(_predict, model, inputs, **kwargs)
     return ORJSONResponse(outputs)
 
 
@@ -171,7 +168,7 @@ async def add(
     if index_name not in vector_stores or vector_stores[index_name].dims != embeddings.shape[1]:
         await create(index_name, embedding_ids, embeddings)
     else:
-        log.info(f"Adding {len(embedding_ids)} embeddings to index '{index_name}'")
+        log.info(f"Adding {len(embedding_ids)} embedding(s) to index '{index_name}'")
         await run(_add, vector_stores[index_name], embedding_ids, embeddings)
 
 
@@ -200,7 +197,6 @@ async def run(func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
         func = partial(func, **kwargs)
     return await asyncio.get_running_loop().run_in_executor(app.state.thread_pool, func, *args)
 
-
 def _load(model: InferenceModel) -> InferenceModel:
     if model.loaded:
         return model
@@ -221,14 +217,11 @@ def _load(model: InferenceModel) -> InferenceModel:
     return model
 
 
-async def _predict(
-    model_name: str, model_type: ModelType, inputs: Any, **options: Any
-) -> np.ndarray[int, np.dtype[np.float32]]:
-    model = await app.state.model_cache.get(model_name, model_type, **options)
+def _predict(model: InferenceModel, inputs: Any, **options: Any) -> np.ndarray[int, np.dtype[np.float32]]:
     if not model.loaded:
-        await run(_load, model)
+        _load(model)
     model.configure(**options)
-    return await run(model.predict, inputs)
+    return model.predict(inputs)
 
 
 def _create(

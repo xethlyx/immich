@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any
 
 import cv2
+import faiss
 import numpy as np
 import onnxruntime as ort
 from insightface.model_zoo import ArcFaceONNX, RetinaFace
@@ -83,7 +84,8 @@ class FaceRecognizer(InferenceModel):
         height, width, _ = image.shape
         for (x1, y1, x2, y2), score, kps in zip(bboxes, scores, kpss):
             cropped_img = norm_crop(image, kps)
-            embedding = self.rec_model.get_feat(cropped_img)[0].tolist()
+            embedding = self.rec_model.get_feat(cropped_img)
+            faiss.normalize_L2(embedding)
             results.append(
                 {
                     "imageWidth": width,
@@ -95,7 +97,7 @@ class FaceRecognizer(InferenceModel):
                         "y2": y2,
                     },
                     "score": score,
-                    "embedding": embedding,
+                    "embedding": embedding[0],
                 }
             )
         return results
