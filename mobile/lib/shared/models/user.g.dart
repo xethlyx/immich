@@ -29,12 +29,12 @@ const UserSchema = CollectionSchema(
       type: IsarType.string,
     ),
     r'id': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'id',
       type: IsarType.string,
     ),
     r'inTimeline': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'inTimeline',
       type: IsarType.bool,
     ),
@@ -54,12 +54,12 @@ const UserSchema = CollectionSchema(
       type: IsarType.bool,
     ),
     r'memoryEnabled': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'memoryEnabled',
       type: IsarType.bool,
     ),
     r'name': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'name',
       type: IsarType.string,
     ),
@@ -138,16 +138,16 @@ void _userSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.avatarColor.name);
-  writer.writeString(offsets[0], object.email);
-  writer.writeString(offsets[1], object.id);
-  writer.writeBool(offsets[2], object.inTimeline);
-  writer.writeBool(offsets[3], object.isAdmin);
-  writer.writeBool(offsets[4], object.isPartnerSharedBy);
-  writer.writeBool(offsets[5], object.isPartnerSharedWith);
-  writer.writeBool(offsets[6], object.memoryEnabled);
-  writer.writeString(offsets[7], object.name);
-  writer.writeString(offsets[8], object.profileImagePath);
-  writer.writeDateTime(offsets[9], object.updatedAt);
+  writer.writeString(offsets[1], object.email);
+  writer.writeString(offsets[2], object.id);
+  writer.writeBool(offsets[3], object.inTimeline);
+  writer.writeBool(offsets[4], object.isAdmin);
+  writer.writeBool(offsets[5], object.isPartnerSharedBy);
+  writer.writeBool(offsets[6], object.isPartnerSharedWith);
+  writer.writeBool(offsets[7], object.memoryEnabled);
+  writer.writeString(offsets[8], object.name);
+  writer.writeString(offsets[9], object.profileImagePath);
+  writer.writeDateTime(offsets[10], object.updatedAt);
 }
 
 User _userDeserialize(
@@ -160,16 +160,16 @@ User _userDeserialize(
     avatarColor:
         _UseravatarColorValueEnumMap[reader.readStringOrNull(offsets[0])] ??
             AvatarColorEnum.primary,
-    email: reader.readString(offsets[0]),
-    id: reader.readString(offsets[1]),
-    inTimeline: reader.readBoolOrNull(offsets[2]) ?? false,
-    isAdmin: reader.readBool(offsets[3]),
-    isPartnerSharedBy: reader.readBoolOrNull(offsets[4]) ?? false,
-    isPartnerSharedWith: reader.readBoolOrNull(offsets[5]) ?? false,
-    memoryEnabled: reader.readBoolOrNull(offsets[6]) ?? true,
-    name: reader.readString(offsets[7]),
-    profileImagePath: reader.readStringOrNull(offsets[8]) ?? '',
-    updatedAt: reader.readDateTime(offsets[9]),
+    email: reader.readString(offsets[1]),
+    id: reader.readString(offsets[2]),
+    inTimeline: reader.readBoolOrNull(offsets[3]) ?? false,
+    isAdmin: reader.readBool(offsets[4]),
+    isPartnerSharedBy: reader.readBoolOrNull(offsets[5]) ?? false,
+    isPartnerSharedWith: reader.readBoolOrNull(offsets[6]) ?? false,
+    memoryEnabled: reader.readBoolOrNull(offsets[7]) ?? true,
+    name: reader.readString(offsets[8]),
+    profileImagePath: reader.readStringOrNull(offsets[9]) ?? '',
+    updatedAt: reader.readDateTime(offsets[10]),
   );
   return object;
 }
@@ -187,19 +187,19 @@ P _userDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 3:
       return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 4:
       return (reader.readBool(offset)) as P;
     case 5:
       return (reader.readBoolOrNull(offset) ?? false) as P;
     case 6:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 7:
-      return (reader.readString(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 8:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 9:
       return (reader.readStringOrNull(offset) ?? '') as P;
     case 10:
