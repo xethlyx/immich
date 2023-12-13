@@ -61,13 +61,6 @@ export class SystemConfigService {
     return mapConfig(newConfig);
   }
 
-  // this is only used by the cli on config change, and it's not actually needed anymore
-  async refreshConfig() {
-    this.communicationRepository.sendServerEvent(ServerEvent.CONFIG_UPDATE);
-    await this.core.refreshConfig();
-    return true;
-  }
-
   addValidator(validator: SystemConfigValidator) {
     this.core.addValidator(validator);
   }
