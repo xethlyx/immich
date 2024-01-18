@@ -2,6 +2,7 @@ import { ActivityEntity } from '@app/infra/entities';
 import { albumStub } from './album.stub';
 import { assetStub } from './asset.stub';
 import { authStub } from './auth.stub';
+import { dateStub } from './date.stub';
 import { userStub } from './user.stub';
 
 export const activityStub = {
@@ -15,8 +16,8 @@ export const activityStub = {
     asset: assetStub.image,
     albumId: albumStub.oneAsset.id,
     album: albumStub.oneAsset,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: dateStub.NOW,
+    updatedAt: dateStub.NOW,
   }),
   liked: Object.freeze<ActivityEntity>({
     id: 'activity-2',
@@ -28,7 +29,7 @@ export const activityStub = {
     asset: assetStub.image,
     albumId: albumStub.oneAsset.id,
     album: albumStub.oneAsset,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: dateStub.NOW,
+    updatedAt: dateStub.NOW,
   }),
 };

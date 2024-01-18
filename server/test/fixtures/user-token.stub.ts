@@ -1,4 +1,5 @@
 import { UserTokenEntity } from '@app/infra/entities';
+import { dateStub } from './date.stub';
 import { userStub } from './user.stub';
 
 export const userTokenStub = {
@@ -7,8 +8,8 @@ export const userTokenStub = {
     token: 'auth_token',
     userId: userStub.user1.id,
     user: userStub.user1,
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date(),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.NOW,
     deviceType: '',
     deviceOS: '',
   }),
@@ -17,8 +18,8 @@ export const userTokenStub = {
     token: 'auth_token',
     userId: userStub.user1.id,
     user: userStub.user1,
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     deviceType: 'Mobile',
     deviceOS: 'Android',
   }),

@@ -89,8 +89,8 @@ describe(StorageTemplateService.name, () => {
 
     it('should migrate single moving picture', async () => {
       userMock.get.mockResolvedValue(userStub.user1);
-      const newMotionPicturePath = `upload/library/${userStub.user1.id}/2022/2022-06-19/${assetStub.livePhotoStillAsset.id}.mp4`;
-      const newStillPicturePath = `upload/library/${userStub.user1.id}/2022/2022-06-19/${assetStub.livePhotoStillAsset.id}.jpeg`;
+      const newMotionPicturePath = `upload/library/${userStub.user1.id}/1970/1970-01-01/${assetStub.livePhotoStillAsset.id}.mp4`;
+      const newStillPicturePath = `upload/library/${userStub.user1.id}/1970/1970-01-01/${assetStub.livePhotoStillAsset.id}.jpeg`;
 
       when(assetMock.save)
         .calledWith({ id: assetStub.livePhotoStillAsset.id, originalPath: newStillPicturePath })

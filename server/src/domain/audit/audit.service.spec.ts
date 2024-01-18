@@ -3,6 +3,7 @@ import {
   IAccessRepositoryMock,
   auditStub,
   authStub,
+  dateStub,
   newAccessRepositoryMock,
   newAssetRepositoryMock,
   newAuditRepositoryMock,
@@ -57,7 +58,7 @@ describe(AuditService.name, () => {
     it('should require full sync if the request is older than 100 days', async () => {
       auditMock.getAfter.mockResolvedValue([]);
 
-      const date = new Date(2022, 0, 1);
+      const date = dateStub.JAN_01_2021;
       await expect(sut.getDeletes(authStub.admin, { after: date, entityType: EntityType.ASSET })).resolves.toEqual({
         needsFullSync: true,
         ids: [],
@@ -73,7 +74,7 @@ describe(AuditService.name, () => {
     it('should get any new or updated assets and deleted ids', async () => {
       auditMock.getAfter.mockResolvedValue([auditStub.delete]);
 
-      const date = new Date();
+      const date = dateStub.NOW;
       await expect(sut.getDeletes(authStub.admin, { after: date, entityType: EntityType.ASSET })).resolves.toEqual({
         needsFullSync: false,
         ids: ['asset-deleted'],

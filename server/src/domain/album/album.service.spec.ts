@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import {
   albumStub,
   authStub,
+  dateStub,
   IAccessRepositoryMock,
   newAccessRepositoryMock,
   newAlbumRepositoryMock,
@@ -75,8 +76,8 @@ describe(AlbumService.name, () => {
         {
           albumId: albumStub.oneAsset.id,
           assetCount: 1,
-          startDate: new Date('1970-01-01'),
-          endDate: new Date('1970-01-01'),
+          startDate: dateStub.JAN_01_1970,
+          endDate: dateStub.JAN_01_1970,
         },
       ]);
       albumMock.getInvalidThumbnail.mockResolvedValue([]);
@@ -120,8 +121,8 @@ describe(AlbumService.name, () => {
       {
         albumId: albumStub.oneAsset.id,
         assetCount: 1,
-        startDate: new Date('1970-01-01'),
-        endDate: new Date('1970-01-01'),
+        startDate: dateStub.JAN_01_1970,
+        endDate: dateStub.JAN_01_1970,
       },
     ]);
     albumMock.getInvalidThumbnail.mockResolvedValue([]);
@@ -139,8 +140,8 @@ describe(AlbumService.name, () => {
       {
         albumId: albumStub.oneAssetInvalidThumbnail.id,
         assetCount: 1,
-        startDate: new Date('1970-01-01'),
-        endDate: new Date('1970-01-01'),
+        startDate: dateStub.JAN_01_1970,
+        endDate: dateStub.JAN_01_1970,
       },
     ]);
     albumMock.getInvalidThumbnail.mockResolvedValue([albumStub.oneAssetInvalidThumbnail.id]);
@@ -160,8 +161,8 @@ describe(AlbumService.name, () => {
       {
         albumId: albumStub.emptyWithInvalidThumbnail.id,
         assetCount: 1,
-        startDate: new Date('1970-01-01'),
-        endDate: new Date('1970-01-01'),
+        startDate: dateStub.JAN_01_1970,
+        endDate: dateStub.JAN_01_1970,
       },
     ]);
     albumMock.getInvalidThumbnail.mockResolvedValue([albumStub.emptyWithInvalidThumbnail.id]);
@@ -435,8 +436,8 @@ describe(AlbumService.name, () => {
         {
           albumId: albumStub.oneAsset.id,
           assetCount: 1,
-          startDate: new Date('1970-01-01'),
-          endDate: new Date('1970-01-01'),
+          startDate: dateStub.JAN_01_1970,
+          endDate: dateStub.JAN_01_1970,
         },
       ]);
 
@@ -456,8 +457,8 @@ describe(AlbumService.name, () => {
         {
           albumId: albumStub.oneAsset.id,
           assetCount: 1,
-          startDate: new Date('1970-01-01'),
-          endDate: new Date('1970-01-01'),
+          startDate: dateStub.JAN_01_1970,
+          endDate: dateStub.JAN_01_1970,
         },
       ]);
 
@@ -477,8 +478,8 @@ describe(AlbumService.name, () => {
         {
           albumId: albumStub.oneAsset.id,
           assetCount: 1,
-          startDate: new Date('1970-01-01'),
-          endDate: new Date('1970-01-01'),
+          startDate: dateStub.JAN_01_1970,
+          endDate: dateStub.JAN_01_1970,
         },
       ]);
 

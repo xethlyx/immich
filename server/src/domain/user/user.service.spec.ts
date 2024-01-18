@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import {
   authStub,
+  dateStub,
   newAlbumRepositoryMock,
   newAssetRepositoryMock,
   newCryptoRepositoryMock,
@@ -31,12 +32,6 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 import { mapUser } from './response-dto';
 import { UserService } from './user.service';
-
-const makeDeletedAt = (daysAgo: number) => {
-  const deletedAt = new Date();
-  deletedAt.setDate(deletedAt.getDate() - daysAgo);
-  return deletedAt;
-};
 
 describe(UserService.name, () => {
   let sut: UserService;
@@ -451,7 +446,7 @@ describe(UserService.name, () => {
         {},
         { deletedAt: undefined },
         { deletedAt: null },
-        { deletedAt: makeDeletedAt(5) },
+        { deletedAt: dateStub.daysAgo(5) },
       ] as UserEntity[]);
 
       await sut.handleUserDeleteCheck();
@@ -462,7 +457,7 @@ describe(UserService.name, () => {
     });
 
     it('should queue user ready for deletion', async () => {
-      const user = { id: 'deleted-user', deletedAt: makeDeletedAt(10) };
+      const user = { id: 'deleted-user', deletedAt: dateStub.daysAgo(10) };
       userMock.getDeletedUsers.mockResolvedValue([user] as UserEntity[]);
 
       await sut.handleUserDeleteCheck();
@@ -474,7 +469,7 @@ describe(UserService.name, () => {
 
   describe('handleUserDelete', () => {
     it('should skip users not ready for deletion', async () => {
-      const user = { id: 'user-1', deletedAt: makeDeletedAt(5) } as UserEntity;
+      const user = { id: 'user-1', deletedAt: dateStub.daysAgo(5) } as UserEntity;
       userMock.get.mockResolvedValue(user);
 
       await sut.handleUserDelete({ id: user.id });
@@ -484,7 +479,7 @@ describe(UserService.name, () => {
     });
 
     it('should delete the user and associated assets', async () => {
-      const user = { id: 'deleted-user', deletedAt: makeDeletedAt(10) } as UserEntity;
+      const user = { id: 'deleted-user', deletedAt: dateStub.daysAgo(10) } as UserEntity;
       userMock.get.mockResolvedValue(user);
 
       await sut.handleUserDelete({ id: user.id });
@@ -502,7 +497,7 @@ describe(UserService.name, () => {
     });
 
     it('should delete the library path for a storage label', async () => {
-      const user = { id: 'deleted-user', deletedAt: makeDeletedAt(10), storageLabel: 'admin' } as UserEntity;
+      const user = { id: 'deleted-user', deletedAt: dateStub.daysAgo(10), storageLabel: 'admin' } as UserEntity;
       userMock.get.mockResolvedValue(user);
 
       await sut.handleUserDelete({ id: user.id });

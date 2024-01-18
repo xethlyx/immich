@@ -1,11 +1,12 @@
 import { PersonEntity } from '@app/infra/entities';
+import { dateStub } from './date.stub';
 import { userStub } from './user.stub';
 
 export const personStub = {
   noName: Object.freeze<PersonEntity>({
     id: 'person-1',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: '',
@@ -18,8 +19,8 @@ export const personStub = {
   }),
   hidden: Object.freeze<PersonEntity>({
     id: 'person-1',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: '',
@@ -32,8 +33,8 @@ export const personStub = {
   }),
   withName: Object.freeze<PersonEntity>({
     id: 'person-1',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: 'Person 1',
@@ -46,8 +47,8 @@ export const personStub = {
   }),
   noBirthDate: Object.freeze<PersonEntity>({
     id: 'person-1',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: 'Person 1',
@@ -60,12 +61,12 @@ export const personStub = {
   }),
   withBirthDate: Object.freeze<PersonEntity>({
     id: 'person-1',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: 'Person 1',
-    birthDate: new Date('1976-06-30'),
+    birthDate: dateStub.MAY_06_1976,
     thumbnailPath: '/path/to/thumbnail.jpg',
     faces: [],
     faceAssetId: null,
@@ -74,8 +75,8 @@ export const personStub = {
   }),
   noThumbnail: Object.freeze<PersonEntity>({
     id: 'person-1',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: '',
@@ -88,8 +89,8 @@ export const personStub = {
   }),
   newThumbnail: Object.freeze<PersonEntity>({
     id: 'person-1',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: '',
@@ -102,8 +103,8 @@ export const personStub = {
   }),
   primaryPerson: Object.freeze<PersonEntity>({
     id: 'person-1',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: 'Person 1',
@@ -116,8 +117,8 @@ export const personStub = {
   }),
   mergePerson: Object.freeze<PersonEntity>({
     id: 'person-2',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: 'Person 2',
@@ -130,8 +131,8 @@ export const personStub = {
   }),
   randomPerson: Object.freeze<PersonEntity>({
     id: 'person-3',
-    createdAt: new Date('2021-01-01'),
-    updatedAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     ownerId: userStub.admin.id,
     owner: userStub.admin,
     name: '',

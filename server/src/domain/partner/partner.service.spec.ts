@@ -1,6 +1,6 @@
 import { UserAvatarColor } from '@app/infra/entities';
 import { BadRequestException } from '@nestjs/common';
-import { authStub, newPartnerRepositoryMock, partnerStub } from '@test';
+import { authStub, dateStub, newPartnerRepositoryMock, partnerStub } from '@test';
 import { IAccessRepository, IPartnerRepository, PartnerDirection } from '../repositories';
 import { PartnerResponseDto } from './partner.dto';
 import { PartnerService } from './partner.service';
@@ -15,9 +15,9 @@ const responseDto = {
     profileImagePath: '',
     shouldChangePassword: false,
     storageLabel: 'admin',
-    createdAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
     deletedAt: null,
-    updatedAt: new Date('2021-01-01'),
+    updatedAt: dateStub.JAN_01_2021,
     externalPath: null,
     memoriesEnabled: true,
     avatarColor: UserAvatarColor.PRIMARY,
@@ -34,9 +34,9 @@ const responseDto = {
     profileImagePath: '',
     shouldChangePassword: false,
     storageLabel: null,
-    createdAt: new Date('2021-01-01'),
+    createdAt: dateStub.JAN_01_2021,
     deletedAt: null,
-    updatedAt: new Date('2021-01-01'),
+    updatedAt: dateStub.JAN_01_2021,
     externalPath: null,
     memoriesEnabled: true,
     avatarColor: UserAvatarColor.PRIMARY,

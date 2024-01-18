@@ -3,6 +3,7 @@ import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import {
   IAccessRepositoryMock,
   authStub,
+  dateStub,
   keyStub,
   loginResponseStub,
   newAccessRepositoryMock,
@@ -246,11 +247,11 @@ describe('AuthService', () => {
 
     it('should sign up the admin', async () => {
       userMock.getAdmin.mockResolvedValue(null);
-      userMock.create.mockResolvedValue({ ...dto, id: 'admin', createdAt: new Date('2021-01-01') } as UserEntity);
+      userMock.create.mockResolvedValue({ ...dto, id: 'admin', createdAt: dateStub.JAN_01_2021 } as UserEntity);
       await expect(sut.adminSignUp(dto)).resolves.toEqual({
         avatarColor: expect.any(String),
         id: 'admin',
-        createdAt: new Date('2021-01-01'),
+        createdAt: dateStub.JAN_01_2021,
         email: 'test@immich.com',
         name: 'immich admin',
       });
@@ -346,7 +347,7 @@ describe('AuthService', () => {
         id: 'not_active',
         token: 'auth_token',
         userId: 'user-id',
-        createdAt: new Date('2021-01-01'),
+        createdAt: dateStub.JAN_01_2021,
         updatedAt: expect.any(Date),
         deviceOS: 'Android',
         deviceType: 'Mobile',

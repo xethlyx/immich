@@ -1,5 +1,6 @@
 import { AuditEntity, DatabaseAction, EntityType } from '@app/infra/entities';
 import { authStub } from './auth.stub';
+import { dateStub } from './date.stub';
 
 export const auditStub = {
   create: Object.freeze<AuditEntity>({
@@ -8,7 +9,7 @@ export const auditStub = {
     action: DatabaseAction.CREATE,
     entityType: EntityType.ASSET,
     ownerId: authStub.admin.user.id,
-    createdAt: new Date(),
+    createdAt: dateStub.NOW,
   }),
   update: Object.freeze<AuditEntity>({
     id: 2,
@@ -16,7 +17,7 @@ export const auditStub = {
     action: DatabaseAction.UPDATE,
     entityType: EntityType.ASSET,
     ownerId: authStub.admin.user.id,
-    createdAt: new Date(),
+    createdAt: dateStub.NOW,
   }),
   delete: Object.freeze<AuditEntity>({
     id: 3,
@@ -24,6 +25,6 @@ export const auditStub = {
     action: DatabaseAction.DELETE,
     entityType: EntityType.ASSET,
     ownerId: authStub.admin.user.id,
-    createdAt: new Date(),
+    createdAt: dateStub.NOW,
   }),
 };

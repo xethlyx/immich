@@ -4,6 +4,7 @@ import {
   IAccessRepositoryMock,
   assetStub,
   authStub,
+  dateStub,
   faceStub,
   newAccessRepositoryMock,
   newAssetRepositoryMock,
@@ -278,15 +279,15 @@ describe(PersonService.name, () => {
       personMock.getAssets.mockResolvedValue([assetStub.image]);
       accessMock.person.checkOwnerAccess.mockResolvedValue(new Set(['person-1']));
 
-      await expect(sut.update(authStub.admin, 'person-1', { birthDate: new Date('1976-06-30') })).resolves.toEqual({
+      await expect(sut.update(authStub.admin, 'person-1', { birthDate: dateStub.MAY_06_1976 })).resolves.toEqual({
         id: 'person-1',
         name: 'Person 1',
-        birthDate: new Date('1976-06-30'),
+        birthDate: dateStub.MAY_06_1976,
         thumbnailPath: '/path/to/thumbnail.jpg',
         isHidden: false,
       });
       expect(personMock.getById).toHaveBeenCalledWith('person-1');
-      expect(personMock.update).toHaveBeenCalledWith({ id: 'person-1', birthDate: new Date('1976-06-30') });
+      expect(personMock.update).toHaveBeenCalledWith({ id: 'person-1', birthDate: dateStub.MAY_06_1976 });
       expect(jobMock.queue).not.toHaveBeenCalled();
       expect(jobMock.queueAll).not.toHaveBeenCalled();
       expect(accessMock.person.checkOwnerAccess).toHaveBeenCalledWith(authStub.admin.user.id, new Set(['person-1']));
@@ -298,7 +299,7 @@ describe(PersonService.name, () => {
       personMock.getAssets.mockResolvedValue([assetStub.image]);
       accessMock.person.checkOwnerAccess.mockResolvedValue(new Set(['person-1']));
 
-      const futureDate = new Date();
+      const futureDate = dateStub.NOW;
       futureDate.setMinutes(futureDate.getMinutes() + 1); // Set birthDate to one minute in the future
 
       await expect(sut.update(authStub.admin, 'person-1', { birthDate: futureDate })).rejects.toThrow(
@@ -307,7 +308,7 @@ describe(PersonService.name, () => {
     });
 
     it('should not throw an error if birthdate is in the past', async () => {
-      const pastDate = new Date();
+      const pastDate = dateStub.NOW;
       pastDate.setMinutes(pastDate.getMinutes() - 1); // Set birthDate to one minute in the past
 
       personMock.getById.mockResolvedValue(personStub.noBirthDate);
@@ -322,7 +323,7 @@ describe(PersonService.name, () => {
     });
 
     it('should not throw an error if birthdate is today', async () => {
-      const today = new Date(); // Set birthDate to now()
+      const today = dateStub.NOW; // Set birthDate to now()
 
       personMock.getById.mockResolvedValue(personStub.noBirthDate);
       personMock.update.mockResolvedValue({ ...personStub.withBirthDate, birthDate: today });

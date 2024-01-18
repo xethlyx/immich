@@ -1,6 +1,7 @@
 import { AssetType, ExifEntity, SystemConfigKey } from '@app/infra/entities';
 import {
   assetStub,
+  dateStub,
   newAlbumRepositoryMock,
   newAssetRepositoryMock,
   newCommunicationRepositoryMock,
@@ -244,8 +245,8 @@ describe(MetadataService.name, () => {
     });
 
     it('should handle a date in a sidecar file', async () => {
-      const originalDate = new Date('2023-11-21T16:13:17.517Z');
-      const sidecarDate = new Date('2022-01-01T00:00:00.000Z');
+      const originalDate = dateStub.JAN_01_1970;
+      const sidecarDate = dateStub.MAY_06_1976;
       assetMock.getByIds.mockResolvedValue([assetStub.sidecar]);
       when(metadataMock.readTags)
         .calledWith(assetStub.sidecar.originalPath)
@@ -278,7 +279,7 @@ describe(MetadataService.name, () => {
         id: assetStub.image.id,
         duration: null,
         fileCreatedAt: assetStub.image.createdAt,
-        localDateTime: new Date('2023-02-23T05:06:29.716Z'),
+        localDateTime: dateStub.FEB_23_2023,
       });
     });
 
@@ -300,7 +301,7 @@ describe(MetadataService.name, () => {
         id: assetStub.withLocation.id,
         duration: null,
         fileCreatedAt: assetStub.withLocation.createdAt,
-        localDateTime: new Date('2023-02-22T05:06:29.716Z'),
+        localDateTime: dateStub.FEB_22_2023,
       });
     });
 
@@ -408,7 +409,7 @@ describe(MetadataService.name, () => {
         BitDepth: 1,
         ColorBitDepth: 1,
         ColorSpace: '1',
-        DateTimeOriginal: new Date('1970-01-01').toISOString(),
+        DateTimeOriginal: dateStub.JAN_01_1970.toISOString(),
         ExposureTime: '100ms',
         FocalLength: 20,
         ImageDescription: 'test description',
@@ -417,7 +418,7 @@ describe(MetadataService.name, () => {
         MediaGroupUUID: 'livePhoto',
         Make: 'test-factory',
         Model: "'mockel'",
-        ModifyDate: new Date('1970-01-01').toISOString(),
+        ModifyDate: dateStub.JAN_01_1970.toISOString(),
         Orientation: 0,
         ProfileDescription: 'extensive description',
         ProjectionType: 'equirectangular',
@@ -432,7 +433,7 @@ describe(MetadataService.name, () => {
         assetId: assetStub.image.id,
         bitsPerSample: expect.any(Number),
         colorspace: tags.ColorSpace,
-        dateTimeOriginal: new Date('1970-01-01'),
+        dateTimeOriginal: dateStub.JAN_01_1970,
         description: tags.ImageDescription,
         exifImageHeight: null,
         exifImageWidth: null,
@@ -457,8 +458,8 @@ describe(MetadataService.name, () => {
       expect(assetMock.save).toHaveBeenCalledWith({
         id: assetStub.image.id,
         duration: null,
-        fileCreatedAt: new Date('1970-01-01'),
-        localDateTime: new Date('1970-01-01'),
+        fileCreatedAt: dateStub.JAN_01_1970,
+        localDateTime: dateStub.JAN_01_1970,
       });
     });
 

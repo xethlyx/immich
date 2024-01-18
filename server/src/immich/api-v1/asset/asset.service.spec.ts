@@ -1,10 +1,11 @@
 import { IJobRepository, ILibraryRepository, IUserRepository, JobName } from '@app/domain';
-import { ASSET_CHECKSUM_CONSTRAINT, AssetEntity, AssetType, ExifEntity } from '@app/infra/entities';
+import { ASSET_CHECKSUM_CONSTRAINT } from '@app/infra/entities';
 import { BadRequestException } from '@nestjs/common';
 import {
   IAccessRepositoryMock,
   assetStub,
   authStub,
+  dateStub,
   fileStub,
   newAccessRepositoryMock,
   newJobRepositoryMock,
@@ -22,64 +23,14 @@ const _getCreateAssetDto = (): CreateAssetDto => {
   const createAssetDto = new CreateAssetDto();
   createAssetDto.deviceAssetId = 'deviceAssetId';
   createAssetDto.deviceId = 'deviceId';
-  createAssetDto.fileCreatedAt = new Date('2022-06-19T23:41:36.910Z');
-  createAssetDto.fileModifiedAt = new Date('2022-06-19T23:41:36.910Z');
+  createAssetDto.fileCreatedAt = dateStub.JAN_01_1970;
+  createAssetDto.fileModifiedAt = dateStub.JAN_01_1970;
   createAssetDto.isFavorite = false;
   createAssetDto.isArchived = false;
   createAssetDto.duration = '0:00:00.000000';
   createAssetDto.libraryId = 'libraryId';
 
   return createAssetDto;
-};
-
-const _getAsset_1 = () => {
-  const asset_1 = new AssetEntity();
-
-  asset_1.id = 'id_1';
-  asset_1.ownerId = 'user_id_1';
-  asset_1.deviceAssetId = 'device_asset_id_1';
-  asset_1.deviceId = 'device_id_1';
-  asset_1.type = AssetType.VIDEO;
-  asset_1.originalPath = 'fake_path/asset_1.jpeg';
-  asset_1.resizePath = '';
-  asset_1.fileModifiedAt = new Date('2022-06-19T23:41:36.910Z');
-  asset_1.fileCreatedAt = new Date('2022-06-19T23:41:36.910Z');
-  asset_1.updatedAt = new Date('2022-06-19T23:41:36.910Z');
-  asset_1.isFavorite = false;
-  asset_1.isArchived = false;
-  asset_1.webpPath = '';
-  asset_1.encodedVideoPath = '';
-  asset_1.duration = '0:00:00.000000';
-  asset_1.exifInfo = new ExifEntity();
-  asset_1.exifInfo.latitude = 49.533547;
-  asset_1.exifInfo.longitude = 10.703075;
-  return asset_1;
-};
-
-const _getAsset_2 = () => {
-  const asset_2 = new AssetEntity();
-
-  asset_2.id = 'id_2';
-  asset_2.ownerId = 'user_id_1';
-  asset_2.deviceAssetId = 'device_asset_id_2';
-  asset_2.deviceId = 'device_id_1';
-  asset_2.type = AssetType.VIDEO;
-  asset_2.originalPath = 'fake_path/asset_2.jpeg';
-  asset_2.resizePath = '';
-  asset_2.fileModifiedAt = new Date('2022-06-19T23:41:36.910Z');
-  asset_2.fileCreatedAt = new Date('2022-06-19T23:41:36.910Z');
-  asset_2.updatedAt = new Date('2022-06-19T23:41:36.910Z');
-  asset_2.isFavorite = false;
-  asset_2.isArchived = false;
-  asset_2.webpPath = '';
-  asset_2.encodedVideoPath = '';
-  asset_2.duration = '0:00:00.000000';
-
-  return asset_2;
-};
-
-const _getAssets = () => {
-  return [_getAsset_1(), _getAsset_2()];
 };
 
 describe('AssetService', () => {
@@ -124,7 +75,6 @@ describe('AssetService', () => {
 
   describe('uploadFile', () => {
     it('should handle a file upload', async () => {
-      const assetEntity = _getAsset_1();
       const file = {
         uuid: 'random-uuid',
         originalPath: 'fake_path/asset_1.jpeg',
@@ -135,10 +85,10 @@ describe('AssetService', () => {
       };
       const dto = _getCreateAssetDto();
 
-      assetRepositoryMock.create.mockResolvedValue(assetEntity);
+      assetRepositoryMock.create.mockResolvedValue(assetStub.image1);
       accessMock.library.checkOwnerAccess.mockResolvedValue(new Set([dto.libraryId!]));
 
-      await expect(sut.uploadFile(authStub.user1, dto, file)).resolves.toEqual({ duplicate: false, id: 'id_1' });
+      await expect(sut.uploadFile(authStub.user1, dto, file)).resolves.toEqual({ duplicate: false, id: 'asset-id-1' });
 
       expect(assetRepositoryMock.create).toHaveBeenCalled();
       expect(userMock.updateUsage).toHaveBeenCalledWith(authStub.user1.user.id, file.size);
@@ -158,10 +108,10 @@ describe('AssetService', () => {
       (error as any).constraint = ASSET_CHECKSUM_CONSTRAINT;
 
       assetRepositoryMock.create.mockRejectedValue(error);
-      assetRepositoryMock.getAssetsByChecksums.mockResolvedValue([_getAsset_1()]);
+      assetRepositoryMock.getAssetsByChecksums.mockResolvedValue([assetStub.image1]);
       accessMock.library.checkOwnerAccess.mockResolvedValue(new Set([dto.libraryId!]));
 
-      await expect(sut.uploadFile(authStub.user1, dto, file)).resolves.toEqual({ duplicate: true, id: 'id_1' });
+      await expect(sut.uploadFile(authStub.user1, dto, file)).resolves.toEqual({ duplicate: true, id: 'asset-id-1' });
 
       expect(jobMock.queue).toHaveBeenCalledWith({
         name: JobName.DELETE_FILES,
@@ -200,11 +150,9 @@ describe('AssetService', () => {
   });
 
   it('get assets by device id', async () => {
-    const assets = _getAssets();
+    const assets = [assetStub.image1, assetStub.imageFrom2015];
 
-    assetRepositoryMock.getAllByDeviceId.mockImplementation(() =>
-      Promise.resolve<string[]>(Array.from(assets.map((asset) => asset.deviceAssetId))),
-    );
+    assetRepositoryMock.getAllByDeviceId.mockResolvedValue(Array.from(assets.map((asset) => asset.deviceAssetId)));
 
     const deviceId = 'device_id_1';
     const result = await sut.getUserAssetsByDeviceId(authStub.user1, deviceId);

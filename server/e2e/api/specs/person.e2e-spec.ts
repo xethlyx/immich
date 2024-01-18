@@ -2,7 +2,7 @@ import { IPersonRepository, LoginResponseDto } from '@app/domain';
 import { PersonController } from '@app/immich';
 import { PersonEntity } from '@app/infra/entities';
 import { INestApplication } from '@nestjs/common';
-import { errorStub, uuidStub } from '@test/fixtures';
+import { dateStub, errorStub, uuidStub } from '@test/fixtures';
 import request from 'supertest';
 import { api } from '../client';
 import { testApp } from '../utils';
@@ -172,7 +172,7 @@ describe(`${PersonController.name}`, () => {
 
     it('should clear a date of birth', async () => {
       const person = await personRepository.create({
-        birthDate: new Date('1990-01-01'),
+        birthDate: dateStub.JAN_01_1970,
         ownerId: loginResponse.userId,
       });
 

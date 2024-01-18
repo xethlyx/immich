@@ -13,7 +13,7 @@ import { AssetController } from '@app/immich';
 import { AssetEntity, AssetType, SharedLinkType } from '@app/infra/entities';
 import { AssetRepository } from '@app/infra/repositories';
 import { INestApplication } from '@nestjs/common';
-import { errorStub, userDto, uuidStub } from '@test/fixtures';
+import { dateStub, errorStub, userDto, uuidStub } from '@test/fixtures';
 import { randomBytes } from 'crypto';
 import request from 'supertest';
 import { api } from '../client';
@@ -97,7 +97,7 @@ describe(`${AssetController.name} (e2e)`, () => {
     await testApp.reset({ entities: [AssetEntity] });
 
     [asset1, asset2, asset3, asset4, asset5] = await Promise.all([
-      createAsset(user1, new Date('1970-01-01')),
+      createAsset(user1, dateStub.JAN_01_1970),
       createAsset(user1, new Date('1970-02-10')),
       createAsset(user1, new Date('1970-02-11'), {
         isFavorite: true,
@@ -111,8 +111,8 @@ describe(`${AssetController.name} (e2e)`, () => {
         updatedAt: yesterday.toJSDate(),
         localDateTime: yesterday.toJSDate(),
       }),
-      createAsset(user2, new Date('1970-01-01')),
-      createAsset(user1, new Date('1970-01-01'), {
+      createAsset(user2, dateStub.JAN_01_1970),
+      createAsset(user1, dateStub.JAN_01_1970, {
         deletedAt: yesterday.toJSDate(),
       }),
     ]);
@@ -122,7 +122,7 @@ describe(`${AssetController.name} (e2e)`, () => {
     await testApp.reset({ entities: [AssetEntity] });
 
     [asset1, asset2, asset3, asset4, asset5] = await Promise.all([
-      createAsset(user1, new Date('1970-01-01')),
+      createAsset(user1, dateStub.JAN_01_1970),
       createAsset(user1, new Date('1970-02-10')),
       createAsset(user1, new Date('1970-02-11'), {
         isFavorite: true,
@@ -139,8 +139,8 @@ describe(`${AssetController.name} (e2e)`, () => {
         webpPath: '/path/to/thumb.webp',
         resizePath: '/path/to/thumb.jpg',
       }),
-      createAsset(user2, new Date('1970-01-01')),
-      createAsset(user1, new Date('1970-01-01'), {
+      createAsset(user2, dateStub.JAN_01_1970),
+      createAsset(user1, dateStub.JAN_01_1970, {
         deletedAt: yesterday.toJSDate(),
       }),
     ]);
@@ -1228,8 +1228,8 @@ describe(`${AssetController.name} (e2e)`, () => {
 
     it('should add stack children', async () => {
       const [parent, child] = await Promise.all([
-        createAsset(user1, new Date('1970-01-01')),
-        createAsset(user1, new Date('1970-01-01')),
+        createAsset(user1, dateStub.JAN_01_1970),
+        createAsset(user1, dateStub.JAN_01_1970),
       ]);
 
       const { status } = await request(server)
@@ -1270,7 +1270,7 @@ describe(`${AssetController.name} (e2e)`, () => {
     });
 
     it('should merge stack children', async () => {
-      const newParent = await createAsset(user1, new Date('1970-01-01'));
+      const newParent = await createAsset(user1, dateStub.JAN_01_1970);
       const { status } = await request(server)
         .put('/asset')
         .set('Authorization', `Bearer ${user1.accessToken}`)

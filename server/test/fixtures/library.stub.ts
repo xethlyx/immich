@@ -1,4 +1,5 @@
 import { LibraryEntity, LibraryType } from '@app/infra/entities';
+import { dateStub } from './date.stub';
 import { userStub } from './user.stub';
 
 export const libraryStub = {
@@ -10,8 +11,8 @@ export const libraryStub = {
     ownerId: 'user-id',
     type: LibraryType.UPLOAD,
     importPaths: [],
-    createdAt: new Date('2022-01-01'),
-    updatedAt: new Date('2022-01-01'),
+    createdAt: dateStub.JAN_01_2021,
+    updatedAt: dateStub.JAN_01_2021,
     refreshedAt: null,
     isVisible: true,
     exclusionPatterns: [],
@@ -24,8 +25,8 @@ export const libraryStub = {
     ownerId: 'user-id',
     type: LibraryType.EXTERNAL,
     importPaths: [],
-    createdAt: new Date('2023-01-01'),
-    updatedAt: new Date('2023-01-01'),
+    createdAt: dateStub.JAN_01_2023,
+    updatedAt: dateStub.JAN_01_2023,
     refreshedAt: null,
     isVisible: true,
     exclusionPatterns: [],

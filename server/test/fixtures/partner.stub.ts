@@ -1,10 +1,11 @@
 import { PartnerEntity } from '@app/infra/entities';
+import { dateStub } from './date.stub';
 import { userStub } from './user.stub';
 
 export const partnerStub = {
   adminToUser1: Object.freeze<PartnerEntity>({
-    createdAt: new Date('2023-02-23T05:06:29.716Z'),
-    updatedAt: new Date('2023-02-23T05:06:29.716Z'),
+    createdAt: dateStub.FEB_23_2023,
+    updatedAt: dateStub.FEB_23_2023,
     sharedById: userStub.admin.id,
     sharedBy: userStub.admin,
     sharedWith: userStub.user1,
@@ -12,8 +13,8 @@ export const partnerStub = {
     inTimeline: true,
   }),
   user1ToAdmin1: Object.freeze<PartnerEntity>({
-    createdAt: new Date('2023-02-23T05:06:29.716Z'),
-    updatedAt: new Date('2023-02-23T05:06:29.716Z'),
+    createdAt: dateStub.FEB_23_2023,
+    updatedAt: dateStub.FEB_23_2023,
     sharedBy: userStub.user1,
     sharedById: userStub.user1.id,
     sharedWithId: userStub.admin.id,

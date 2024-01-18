@@ -3,7 +3,7 @@ import { AppModule, UserController } from '@app/immich';
 import { UserEntity } from '@app/infra/entities';
 import { INestApplication } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { errorStub, userDto, userSignupStub, userStub } from '@test/fixtures';
+import { dateStub, errorStub, userDto, userSignupStub, userStub } from '@test/fixtures';
 import request from 'supertest';
 import { Repository } from 'typeorm';
 import { api } from '../client';
@@ -197,7 +197,7 @@ describe(`${UserController.name}`, () => {
         deletedAt: expect.any(String),
       });
 
-      await userRepository.save({ id: deleteRequest.body.id, deletedAt: new Date('1970-01-01').toISOString() });
+      await userRepository.save({ id: deleteRequest.body.id, deletedAt: dateStub.JAN_01_1970.toISOString() });
 
       await userService.handleUserDelete({ id: userToDelete.id });
 

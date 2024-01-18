@@ -4,6 +4,7 @@ import { BadRequestException } from '@nestjs/common';
 import {
   assetStub,
   authStub,
+  dateStub,
   IAccessRepositoryMock,
   libraryStub,
   newAccessRepositoryMock,
@@ -54,8 +55,8 @@ describe(LibraryService.name, () => {
 
     storageMock.stat.mockResolvedValue({
       size: 100,
-      mtime: new Date('2023-01-01'),
-      ctime: new Date('2023-01-01'),
+      mtime: dateStub.JAN_01_2023,
+      ctime: dateStub.JAN_01_2023,
     } as Stats);
 
     // Always validate owner access for library.
@@ -392,7 +393,7 @@ describe(LibraryService.name, () => {
 
       assetMock.getByLibraryIdAndOriginalPath.mockResolvedValue(null);
       assetMock.create.mockResolvedValue(assetStub.image);
-      libraryMock.get.mockResolvedValue({ ...libraryStub.externalLibrary1, deletedAt: new Date() });
+      libraryMock.get.mockResolvedValue({ ...libraryStub.externalLibrary1, deletedAt: dateStub.NOW });
 
       await expect(sut.handleAssetRefresh(mockLibraryJob)).resolves.toBe(false);
 
@@ -410,7 +411,7 @@ describe(LibraryService.name, () => {
       storageMock.stat.mockResolvedValue({
         size: 100,
         mtime: assetStub.image.fileModifiedAt,
-        ctime: new Date('2023-01-01'),
+        ctime: dateStub.JAN_01_2023,
       } as Stats);
 
       assetMock.getByLibraryIdAndOriginalPath.mockResolvedValue(assetStub.image);
@@ -531,13 +532,13 @@ describe(LibraryService.name, () => {
       await expect(sut.handleAssetRefresh(mockLibraryJob)).resolves.toBe(true);
 
       expect(assetMock.updateAll).toHaveBeenCalledWith([assetStub.image.id], {
-        fileCreatedAt: new Date('2023-01-01'),
-        fileModifiedAt: new Date('2023-01-01'),
+        fileCreatedAt: dateStub.JAN_01_2023,
+        fileModifiedAt: dateStub.JAN_01_2023,
       });
     });
 
     it('should refresh an existing asset with modified mtime', async () => {
-      const filemtime = new Date();
+      const filemtime = dateStub.NOW;
       filemtime.setSeconds(assetStub.image.fileModifiedAt.getSeconds() + 10);
 
       const mockLibraryJob: ILibraryFileJob = {
@@ -550,7 +551,7 @@ describe(LibraryService.name, () => {
       storageMock.stat.mockResolvedValue({
         size: 100,
         mtime: filemtime,
-        ctime: new Date('2023-01-01'),
+        ctime: dateStub.JAN_01_2023,
       } as Stats);
 
       assetMock.getByLibraryIdAndOriginalPath.mockResolvedValue(null);

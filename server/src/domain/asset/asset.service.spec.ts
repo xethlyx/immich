@@ -323,7 +323,7 @@ describe(AssetService.name, () => {
   describe('getMemoryLane', () => {
     beforeAll(() => {
       jest.useFakeTimers();
-      jest.setSystemTime(new Date('2024-01-15'));
+      jest.setSystemTime(new Date('2024-02-23'));
     });
 
     afterAll(() => {
@@ -333,12 +333,12 @@ describe(AssetService.name, () => {
     it('should set the title correctly', async () => {
       assetMock.getByDayOfYear.mockResolvedValue([assetStub.image, assetStub.imageFrom2015]);
 
-      await expect(sut.getMemoryLane(authStub.admin, { day: 15, month: 1 })).resolves.toEqual([
+      await expect(sut.getMemoryLane(authStub.admin, { day: 23, month: 2 })).resolves.toEqual([
         { title: '1 year since...', assets: [mapAsset(assetStub.image)] },
         { title: '9 years since...', assets: [mapAsset(assetStub.imageFrom2015)] },
       ]);
 
-      expect(assetMock.getByDayOfYear.mock.calls).toEqual([[authStub.admin.user.id, { day: 15, month: 1 }]]);
+      expect(assetMock.getByDayOfYear.mock.calls).toEqual([[authStub.admin.user.id, { day: 23, month: 2 }]]);
     });
   });
 
