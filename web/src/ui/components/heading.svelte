@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Size } from '../types';
 
+  export let id: string | undefined = undefined;
   export let size: Size = 'xl';
   export let color: 'primary' = 'primary';
 
@@ -30,13 +31,13 @@
 </script>
 
 {#if size === 'xl'}
-  <h1 class={className}><slot /></h1>
+  <h1 {id} class={className}><slot /></h1>
 {:else if size === 'lg'}
-  <h2 class={className}><slot /></h2>
+  <h2 {id} class={className}><slot /></h2>
 {:else if size === 'md'}
-  <h3 class={className}><slot /></h3>
+  <h3 {id} class={className}><slot /></h3>
 {:else if size === 'sm'}
-  <h4 class={className}><slot /></h4>
+  <h4 {id} class={className}><slot /></h4>
 {:else if size === 'xs'}
-  <h5 class={className}><slot /></h5>
+  <h5 {id} class={className}><slot /></h5>
 {/if}
