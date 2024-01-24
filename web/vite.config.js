@@ -16,6 +16,7 @@ const config = {
       'xmlhttprequest-ssl': './node_modules/engine.io-client/lib/xmlhttprequest.js',
       '@test-data': path.resolve(__dirname, './src/test-data'),
       '@api': path.resolve('./src/api'),
+      '@ui': path.resolve('./src/ui'),
     },
   },
   server: {

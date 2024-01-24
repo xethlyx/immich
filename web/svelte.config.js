@@ -23,6 +23,7 @@ const config = {
     alias: {
       $lib: 'src/lib',
       '$lib/*': 'src/lib/*',
+      '@ui/*': 'src/ui/*',
       '@api': 'src/api',
       '@test-data': 'src/test-data',
     },
