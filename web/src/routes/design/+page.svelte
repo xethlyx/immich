@@ -47,22 +47,30 @@
   </div>
 
   <main class="m-8 pb-16">
-    <Heading size="xl">Design</Heading>
+    <div class="mb-6 w-full bg-gray-200 dark:bg-gray-800 p-6 font-bold">
+      <Heading size="xl">IMMICH COMPONENTS</Heading>
+    </div>
 
+    <!-- THEME SWITCHER -->
     <section class="py-4 flex flex-col gap-2">
-      <Heading size="lg">Theme Switcher</Heading>
+      <Heading size="xl">Theme Switcher</Heading>
       <ThemeSwitcher on:theme={({ detail }) => ($colorTheme = { value: detail, system: false })}></ThemeSwitcher>
     </section>
 
+    <hr />
+
+    <!-- HEADING -->
     <section class="py-4 flex flex-col gap-2">
-      <Heading id="headings" size="lg">Headings</Heading>
+      <Heading id="headings" size="xl">Headings</Heading>
       {#each sizes as size}
         <Heading {size}>Heading ({size})</Heading>
       {/each}
     </section>
+    <hr />
 
+    <!-- BUTTONS -->
     <section class="py-4 flex flex-col gap-2">
-      <Heading id="buttons" size="lg">Buttons</Heading>
+      <Heading id="buttons" size="xl">Buttons</Heading>
 
       <Heading size="md">Colors</Heading>
       <div class="flex gap-2">
@@ -127,9 +135,11 @@
         <Button on:click={() => alert('Hello')}>on:click</Button>
       </div>
     </section>
+    <hr />
 
+    <!-- CARDS -->
     <section class="py-4 flex flex-col gap-2">
-      <Heading id="cards" size="lg">Cards</Heading>
+      <Heading id="cards" size="xl">Cards</Heading>
 
       <div class="flex flex-col gap-2">
         {#each sizes as size}
@@ -144,9 +154,11 @@
         {/each}
       </div>
     </section>
+    <hr />
 
+    <!-- SIDEBAR -->
     <section class="py-4 flex flex-col gap-2">
-      <Heading id="sidebar" size="lg">Sidebar</Heading>
+      <Heading id="sidebar" size="xl">Sidebar</Heading>
       <Sidebar>
         <SidebarItem title="Item A" icon={mdiImageMultiple} isSelected></SidebarItem>
         <SidebarItem title="Item B" icon={mdiHeartMultiple}></SidebarItem>
@@ -154,7 +166,7 @@
         <SidebarItem title="Item D" icon={mdiTrashCan}></SidebarItem>
       </Sidebar>
     </section>
-
+    <hr />
     <!-- <section class="py-4 flex flex-col gap-2">
     <Heading size="lg">Layouts</Heading>
   </section> -->

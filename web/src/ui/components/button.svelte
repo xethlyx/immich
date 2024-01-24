@@ -87,7 +87,7 @@
   const getSizeClasses = () => {
     switch (size) {
       case 'xs':
-        return 'px-1 py-1 text-xs';
+        return 'p-2 text-xs';
       case 'sm':
         return 'px-4 py-2 text-sm';
       case 'icon':
