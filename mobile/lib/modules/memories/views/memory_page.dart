@@ -253,9 +253,6 @@ class MemoryPage extends HookConsumerWidget {
                                     asset: asset,
                                     title: memories[mIndex].title,
                                     showTitle: index == 0,
-                                    onVideoEnded: () {
-                                      toNextAsset(index);
-                                    },
                                   ),
                                 ),
                               );
