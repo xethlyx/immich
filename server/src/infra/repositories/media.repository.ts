@@ -15,7 +15,7 @@ export class MediaRepository implements IMediaRepository {
   private logger = new ImmichLogger(MediaRepository.name);
 
   crop(input: string | Buffer, options: CropOptions): Promise<Buffer> {
-    return sharp(input, { failOn: 'none' })
+    return sharp(input, { failOn: 'none', limitInputPixels: 500_000_000 }) // 500MP
       .pipelineColorspace('rgb16')
       .extract({
         left: options.left,

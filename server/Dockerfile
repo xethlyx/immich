@@ -45,7 +45,10 @@ FROM ghcr.io/immich-app/base-server-prod:20240227@sha256:d47f5f7f2b6c53957c63533
 WORKDIR /usr/src/app
 ENV NODE_ENV=production \
     NVIDIA_DRIVER_CAPABILITIES=all \
-    NVIDIA_VISIBLE_DEVICES=all
+    NVIDIA_VISIBLE_DEVICES=all \
+    MAGICK_DISK_LIMIT=0 \
+    MAGICK_MAP_LIMIT=0 \
+    MAGICK_AREA_LIMIT=500MP
 COPY --from=prod /usr/src/app/node_modules ./node_modules
 COPY --from=prod /usr/src/app/dist ./dist
 COPY --from=prod /usr/src/app/bin ./bin
