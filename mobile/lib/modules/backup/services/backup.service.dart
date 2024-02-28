@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:background_downloader/background_downloader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -33,6 +34,7 @@ final backupServiceProvider = Provider(
 
 class BackupService {
   final httpClient = http.Client();
+  final _fileDownloader = FileDownloader();
   final ApiService _apiService;
   final Isar _db;
   final Logger _log = Logger("BackupService");
@@ -242,117 +244,101 @@ class BackupService {
           )
         : assetList.toList();
 
+    final tasks = <UploadTask>[];
     for (var entity in assetsToUpload) {
-      File? file;
-      File? livePhotoFile;
+      final isAvailableLocally =
+          await entity.isLocallyAvailable(isOrigin: true);
 
-      try {
-        final isAvailableLocally =
-            await entity.isLocallyAvailable(isOrigin: true);
-
-        // Handle getting files from iCloud
-        if (!isAvailableLocally && Platform.isIOS) {
-          // Skip iCloud assets if the user has disabled this feature
-          if (isIgnoreIcloudAssets) {
-            continue;
-          }
-
-          setCurrentUploadAssetCb(
-            CurrentUploadAsset(
-              id: entity.id,
-              fileCreatedAt: entity.createDateTime.year == 1970
-                  ? entity.modifiedDateTime
-                  : entity.createDateTime,
-              fileName: await entity.titleAsync,
-              fileType: _getAssetType(entity.type),
-              iCloudAsset: true,
-            ),
-          );
-
-          file = await entity.loadFile(progressHandler: pmProgressHandler);
-          livePhotoFile = await entity.loadFile(
-            withSubtype: true,
-            progressHandler: pmProgressHandler,
-          );
-        } else {
-          if (entity.type == AssetType.video) {
-            file = await entity.originFile;
-          } else {
-            file = await entity.originFile.timeout(const Duration(seconds: 5));
-            if (entity.isLivePhoto) {
-              livePhotoFile = await entity.originFileWithSubtype
-                  .timeout(const Duration(seconds: 5));
-            }
-          }
+      // Handle getting files from iCloud
+      if (!isAvailableLocally && Platform.isIOS) {
+        // Skip iCloud assets if the user has disabled this feature
+        if (isIgnoreIcloudAssets) {
+          continue;
         }
 
-        if (file != null) {
-          String originalFileName = await entity.titleAsync;
-          var fileStream = file.openRead();
-          var assetRawUploadData = http.MultipartFile(
-            "assetData",
-            fileStream,
-            file.lengthSync(),
-            filename: originalFileName,
-          );
+        setCurrentUploadAssetCb(
+          CurrentUploadAsset(
+            id: entity.id,
+            fileCreatedAt: entity.createDateTime.year == 1970
+                ? entity.modifiedDateTime
+                : entity.createDateTime,
+            fileName: await entity.titleAsync,
+            fileType: _getAssetType(entity.type),
+            iCloudAsset: true,
+          ),
+        );
+      }
 
-          var req = MultipartRequest(
-            'POST',
-            Uri.parse('$savedEndpoint/asset/upload'),
-            onProgress: ((bytes, totalBytes) =>
-                uploadProgressCb(bytes, totalBytes)),
-          );
-          req.headers["x-immich-user-token"] = Store.get(StoreKey.accessToken);
-          req.headers["Transfer-Encoding"] = "chunked";
+      final files = [];
+      // TODO: This is silly to have to load the file just to access the path
+      // But there doesn't seem to be any other way to do it
+      final fileName = (await entity.originFile)?.path;
+      files.add(fileName);
 
-          req.fields['deviceAssetId'] = entity.id;
-          req.fields['deviceId'] = deviceId;
-          req.fields['fileCreatedAt'] =
-              entity.createDateTime.toUtc().toIso8601String();
-          req.fields['fileModifiedAt'] =
-              entity.modifiedDateTime.toUtc().toIso8601String();
-          req.fields['isFavorite'] = entity.isFavorite.toString();
-          req.fields['duration'] = entity.videoDuration.toString();
+      if (entity.isLivePhoto) {
+        final livePhotoFileName = (await entity.originFileWithSubtype)?.path;
+        if (livePhotoFileName != null) {
+          files.add(livePhotoFileName);
+        }
+      }
 
-          req.files.add(assetRawUploadData);
+      final url = '$savedEndpoint/asset/upload';
+      final headers = {
+        'x-immich-user-token': Store.get(StoreKey.accessToken),
+        'Transfer-Encoding': 'chunked',
+      };
 
-          if (entity.isLivePhoto) {
-            if (livePhotoFile != null) {
-              final livePhotoTitle = p.setExtension(
-                originalFileName,
-                p.extension(livePhotoFile.path),
-              );
-              final fileStream = livePhotoFile.openRead();
-              final livePhotoRawUploadData = http.MultipartFile(
-                "livePhotoData",
-                fileStream,
-                livePhotoFile.lengthSync(),
-                filename: livePhotoTitle,
-              );
-              req.files.add(livePhotoRawUploadData);
-            } else {
-              _log.warning(
-                "Failed to obtain motion part of the livePhoto - $originalFileName",
-              );
-            }
-          }
+      final fields = {
+        'deviceAssetId': entity.id,
+        'deviceId': deviceId,
+        'fileCreatedAt': entity.createDateTime.toUtc().toIso8601String(),
+        'fileModifiedAt': entity.modifiedDateTime.toUtc().toIso8601String(),
+        'isFavorite': entity.isFavorite.toString(),
+        'duration': entity.videoDuration.toString(),
+      };
 
-          setCurrentUploadAssetCb(
-            CurrentUploadAsset(
-              id: entity.id,
-              fileCreatedAt: entity.createDateTime.year == 1970
-                  ? entity.modifiedDateTime
-                  : entity.createDateTime,
-              fileName: originalFileName,
-              fileType: _getAssetType(entity.type),
-              iCloudAsset: false,
-            ),
-          );
+      print('uploading to $url');
+      print('fields $fields');
+      print('headers $headers');
+      final task = MultiUploadTask(
+        url: url,
+        files: files,
+        headers: headers,
+        fields: fields,
+        updates: Updates.statusAndProgress,
+        group: 'backup',
+        taskId: entity.id,
+        retries: 0,
+        displayName: 'Immich',
+        httpRequestMethod: 'POST',
+      );
 
-          var response =
-              await httpClient.send(req, cancellationToken: cancelToken);
+      print('created task $task for files $files');
 
-          if (response.statusCode == 200) {
+      tasks.add(task);
+    }
+
+    final result = await _fileDownloader.uploadBatch(
+      tasks,
+      batchProgressCallback: (succeeded, failed) =>
+          print('$succeeded succeeded, $failed failed'),
+      taskStatusCallback: (status) => print('status $status'),
+      taskProgressCallback: (update) => print('update $update'),
+      onElapsedTime: (t) => print('time is $t'),
+      elapsedTimeInterval: const Duration(seconds: 1),
+    );
+
+    print(
+      '$result is done with ${result.succeeded.length} succeeded and ${result.failed.length} failed',
+    );
+
+    for (final task in result.succeeded) {
+      final r = result.results[task];
+      print('successful task $task with result $r');
+    }
+
+    /*
+          if (result.status == 200) {
             // asset is a duplicate (already exists on the server)
             duplicatedAssetIds.add(entity.id);
             uploadSuccessCb(entity.id, deviceId, true);
@@ -405,6 +391,7 @@ class BackupService {
         }
       }
     }
+    */
     if (duplicatedAssetIds.isNotEmpty) {
       await _saveDuplicatedAssetIds(duplicatedAssetIds);
     }
