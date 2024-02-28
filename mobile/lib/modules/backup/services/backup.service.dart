@@ -297,44 +297,89 @@ class BackupService {
         'duration': entity.videoDuration.toString(),
       };
 
-      print('uploading to $url');
-      print('fields $fields');
-      print('headers $headers');
-      final task = MultiUploadTask(
-        url: url,
-        files: files,
-        headers: headers,
-        fields: fields,
-        updates: Updates.statusAndProgress,
-        group: 'backup',
-        taskId: entity.id,
-        retries: 0,
-        displayName: 'Immich',
-        httpRequestMethod: 'POST',
-      );
+      if (files.length == 1) {
+        final String file = files.first;
+        final split = file.split('/');
+        final name = split.last;
+        final directory = split.take(split.length - 1).join('/');
 
-      print('created task $task for files $files');
+        final task = UploadTask(
+          url: url,
+          group: 'backup',
+          fileField: 'assetData',
+          taskId: entity.id,
+          fields: fields,
+          headers: headers,
+          updates: Updates.statusAndProgress,
+          retries: 0,
+          httpRequestMethod: 'POST',
+          displayName: 'Immich',
+          filename: name,
+          directory: directory,
+          baseDirectory: BaseDirectory.root,
+        );
+        tasks.add(task);
+      } else {
+        final task = MultiUploadTask(
+          url: url,
+          files: files,
+          headers: headers,
+          fields: fields,
+          updates: Updates.statusAndProgress,
+          group: 'backup',
+          taskId: entity.id,
+          retries: 0,
+          displayName: 'Immich',
+          httpRequestMethod: 'POST',
+          baseDirectory: BaseDirectory.root,
+        );
 
-      tasks.add(task);
+        print('created task $task for files $files');
+
+        tasks.add(task);
+      }
     }
 
-    final result = await _fileDownloader.uploadBatch(
-      tasks,
-      batchProgressCallback: (succeeded, failed) =>
-          print('$succeeded succeeded, $failed failed'),
-      taskStatusCallback: (status) => print('status $status'),
-      taskProgressCallback: (update) => print('update $update'),
-      onElapsedTime: (t) => print('time is $t'),
-      elapsedTimeInterval: const Duration(seconds: 1),
-    );
+    final permission = await _fileDownloader.permissions
+        .status(PermissionType.androidSharedStorage);
+    print('has permission $permission');
 
-    print(
-      '$result is done with ${result.succeeded.length} succeeded and ${result.failed.length} failed',
-    );
+    if (tasks.length == 1) {
+      final result = await _fileDownloader.upload(
+        tasks.first,
+        onProgress: (percent) => print('${percent * 100} done'),
+        onStatus: (status) => print('status $status'),
+        onElapsedTime: (t) => print('time is $t'),
+        elapsedTimeInterval: const Duration(seconds: 1),
+      );
 
-    for (final task in result.succeeded) {
-      final r = result.results[task];
-      print('successful task $task with result $r');
+      print('$result is done with ${result.status}');
+      print('result ${result.responseBody}');
+      print('result ${result.responseHeaders}');
+    } else {
+      final result = await _fileDownloader.uploadBatch(
+        tasks,
+        batchProgressCallback: (succeeded, failed) =>
+            print('$succeeded succeeded, $failed failed'),
+        taskStatusCallback: (status) => print('status $status'),
+        taskProgressCallback: (update) => print('update $update'),
+        onElapsedTime: (t) => print('time is $t'),
+        elapsedTimeInterval: const Duration(seconds: 1),
+      );
+
+      print(
+        '$result is done with ${result.succeeded.length} succeeded and ${result.failed.length} failed',
+      );
+
+      for (final task in result.succeeded) {
+        final r = result.results[task];
+        print('successful task $task with result $r');
+      }
+
+      for (final task in result.failed) {
+        final r = result.results[task];
+        print('failed task $task with result $r');
+      }
     }
 
     /*
