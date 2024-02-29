@@ -22,8 +22,15 @@ export class MediaRepository implements IMediaRepository {
   private logger = new ImmichLogger(MediaRepository.name);
 
   async generateThumbnail(input: string | Buffer, output: string, options: ThumbnailOptions): Promise<void> {
-    const pipeline = sharp(input, { failOn: 'none' })
-      .pipelineColorspace(options.colorspace === Colorspace.SRGB ? 'srgb' : 'rgb16')
+    const pipeline = sharp(input, { failOn: 'none' }).pipelineColorspace(
+      options.colorspace === Colorspace.SRGB ? 'srgb' : 'rgb16',
+    );
+
+    if (options.crop) {
+      pipeline.extract(options.crop);
+    }
+
+    await pipeline
       .resize(options.size, options.size, { fit: 'outside', withoutEnlargement: true })
       .rotate()
       .withIccProfile(options.colorspace)
@@ -31,13 +38,8 @@ export class MediaRepository implements IMediaRepository {
         quality: options.quality,
         // this is default in libvips (except the threshold is 90), but we need to set it manually in sharp
         chromaSubsampling: options.quality >= 80 ? '4:4:4' : '4:2:0',
-      });
-
-    if (options.crop) {
-      pipeline.extract(options.crop);
-    }
-
-    await pipeline.toFile(output);
+      })
+      .toFile(output);
   }
 
   async probe(input: string): Promise<VideoInfo> {
