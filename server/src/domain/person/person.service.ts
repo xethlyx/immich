@@ -520,15 +520,15 @@ export class PersonService {
       height: newHalfSize * 2,
     };
 
-    const croppedOutput = await this.mediaRepository.crop(asset.resizePath, cropOptions);
     const thumbnailOptions = {
       format: 'jpeg',
       size: FACE_THUMBNAIL_SIZE,
       colorspace: thumbnail.colorspace,
       quality: thumbnail.quality,
+      crop: cropOptions,
     } as const;
 
-    await this.mediaRepository.resize(croppedOutput, thumbnailPath, thumbnailOptions);
+    await this.mediaRepository.generateThumbnail(asset.resizePath, thumbnailPath, thumbnailOptions);
     await this.repository.update({ id: person.id, thumbnailPath });
 
     return true;

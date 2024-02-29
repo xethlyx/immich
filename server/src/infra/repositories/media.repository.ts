@@ -1,7 +1,7 @@
 import {
-  CropOptions,
+ 
   IMediaRepository,
-  ResizeOptions,
+  ThumbnailOptions,
   TranscodeOptions,
   VideoInfo,
   handlePromiseError,
@@ -21,20 +21,8 @@ sharp.cache({ files: 0 });
 export class MediaRepository implements IMediaRepository {
   private logger = new ImmichLogger(MediaRepository.name);
 
-  crop(input: string | Buffer, options: CropOptions): Promise<Buffer> {
-    return sharp(input, { failOn: 'none' })
-      .pipelineColorspace('rgb16')
-      .extract({
-        left: options.left,
-        top: options.top,
-        width: options.width,
-        height: options.height,
-      })
-      .toBuffer();
-  }
-
-  async resize(input: string | Buffer, output: string, options: ResizeOptions): Promise<void> {
-    await sharp(input, { failOn: 'none' })
+  async generateThumbnail(input: string | Buffer, output: string, options: ThumbnailOptions): Promise<void> {
+    const pipeline = sharp(input, { failOn: 'none' })
       .pipelineColorspace(options.colorspace === Colorspace.SRGB ? 'srgb' : 'rgb16')
       .resize(options.size, options.size, { fit: 'outside', withoutEnlargement: true })
       .rotate()
@@ -43,8 +31,13 @@ export class MediaRepository implements IMediaRepository {
         quality: options.quality,
         // this is default in libvips (except the threshold is 90), but we need to set it manually in sharp
         chromaSubsampling: options.quality >= 80 ? '4:4:4' : '4:2:0',
-      })
-      .toFile(output);
+      });
+
+    if (options.crop) {
+      pipeline.extract(options.crop);
+    }
+
+    await pipeline.toFile(output);
   }
 
   async probe(input: string): Promise<VideoInfo> {
