@@ -85,7 +85,7 @@ export class SearchRepository implements ISearchRepository {
     pagination: SearchPaginationOptions,
     { embedding, userIds, personIds, ...options }: SmartSearchOptions,
   ): Paginated<AssetEntity> {
-    if (!isValidInteger(pagination.size, { min: 1 })) {
+    if (!isValidInteger(pagination.size, { min: 1, max: 1000 })) {
       throw new Error(`Invalid value for 'size': ${pagination.size}`);
     }
 
@@ -123,7 +123,7 @@ export class SearchRepository implements ISearchRepository {
     maxDistance,
     hasPerson,
   }: FaceEmbeddingSearch): Promise<FaceSearchResult[]> {
-    if (!isValidInteger(numResults, { min: 1 })) {
+    if (!isValidInteger(numResults, { min: 1, max: 1000 })) {
       throw new Error(`Invalid value for 'numResults': ${numResults}`);
     }
 
