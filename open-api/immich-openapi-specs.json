@@ -9904,9 +9904,6 @@
           "backgroundTask": {
             "$ref": "#/components/schemas/JobSettingsDto"
           },
-          "duplicateDetection": {
-            "$ref": "#/components/schemas/JobSettingsDto"
-          },
           "faceDetection": {
             "$ref": "#/components/schemas/JobSettingsDto"
           },
@@ -9937,7 +9934,6 @@
         },
         "required": [
           "backgroundTask",
-          "duplicateDetection",
           "faceDetection",
           "library",
           "metadataExtraction",
