@@ -123,6 +123,7 @@ import { TrashService } from 'src/services/trash.service';
 import { UserService } from 'src/services/user.service';
 import { otelConfig } from 'src/utils/instrumentation';
 import { ImmichLogger } from 'src/utils/logger';
+import { PrismaRepository } from './repositories/prisma.repository';
 
 const commands = [
   ResetAdminPasswordCommand,
@@ -211,6 +212,7 @@ const repositories: Provider[] = [
   { provide: IMoveRepository, useClass: MoveRepository },
   { provide: IPartnerRepository, useClass: PartnerRepository },
   { provide: IPersonRepository, useClass: PersonRepository },
+  { provide: PrismaRepository, useClass: PrismaRepository },
   { provide: IServerInfoRepository, useClass: ServerInfoRepository },
   { provide: ISharedLinkRepository, useClass: SharedLinkRepository },
   { provide: ISearchRepository, useClass: SearchRepository },
