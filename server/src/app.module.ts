@@ -212,7 +212,6 @@ const repositories: Provider[] = [
   { provide: IMoveRepository, useClass: MoveRepository },
   { provide: IPartnerRepository, useClass: PartnerRepository },
   { provide: IPersonRepository, useClass: PersonRepository },
-  { provide: PrismaRepository, useClass: PrismaRepository },
   { provide: IServerInfoRepository, useClass: ServerInfoRepository },
   { provide: ISharedLinkRepository, useClass: SharedLinkRepository },
   { provide: ISearchRepository, useClass: SearchRepository },
@@ -223,6 +222,7 @@ const repositories: Provider[] = [
   { provide: IMediaRepository, useClass: MediaRepository },
   { provide: IUserRepository, useClass: UserRepository },
   { provide: IUserTokenRepository, useClass: UserTokenRepository },
+  PrismaRepository,
 ];
 
 const middleware = [
