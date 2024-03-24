@@ -187,7 +187,7 @@ ORDER BY
   "search"."embedding" <= > $6 ASC
 LIMIT
   101
-ROLLBACK
+COMMIT
 
 -- SearchRepository.searchFaces
 START TRANSACTION
