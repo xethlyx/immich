@@ -25,10 +25,10 @@
     <form autocomplete="off" on:submit|preventDefault>
       <div class="ml-4 mt-4 flex flex-col gap-4">
         <SettingSelect
-          label="SMALL THUMBNAIL RESOLUTION"
+          label="THUMBNAIL RESOLUTION"
           desc="Used when viewing groups of photos (main timeline, album view, etc.). Higher resolutions can preserve more detail but take longer to encode, have larger file sizes, and can reduce app responsiveness."
           number
-          bind:value={config.thumbnail.webpSize}
+          bind:value={config.thumbnail.thumbnailSize}
           options={[
             { value: 1080, text: '1080p' },
             { value: 720, text: '720p' },
@@ -37,15 +37,15 @@
             { value: 200, text: '200p' },
           ]}
           name="resolution"
-          isEdited={config.thumbnail.webpSize !== savedConfig.thumbnail.webpSize}
+          isEdited={config.thumbnail.thumbnailSize !== savedConfig.thumbnail.thumbnailSize}
           {disabled}
         />
 
         <SettingSelect
-          label="LARGE THUMBNAIL RESOLUTION"
+          label="PREVIEW RESOLUTION"
           desc="Used when viewing a single photo and for machine learning. Higher resolutions can preserve more detail but take longer to encode, have larger file sizes, and can reduce app responsiveness."
           number
-          bind:value={config.thumbnail.jpegSize}
+          bind:value={config.thumbnail.previewSize}
           options={[
             { value: 2160, text: '4K' },
             { value: 1440, text: '1440p' },
@@ -53,14 +53,14 @@
             { value: 720, text: '720p' },
           ]}
           name="resolution"
-          isEdited={config.thumbnail.jpegSize !== savedConfig.thumbnail.jpegSize}
+          isEdited={config.thumbnail.previewSize !== savedConfig.thumbnail.previewSize}
           {disabled}
         />
 
         <SettingInputField
           inputType={SettingInputFieldType.NUMBER}
           label="QUALITY"
-          desc="Thumbnail quality from 1-100. Higher is better for quality but produces larger files."
+          desc="Image quality from 1-100. Higher is better for quality but produces larger files."
           bind:value={config.thumbnail.quality}
           isEdited={config.thumbnail.quality !== savedConfig.thumbnail.quality}
         />

@@ -242,14 +242,14 @@ export type CuratedLocationsResponseDto = {
     deviceAssetId: string;
     deviceId: string;
     id: string;
-    resizePath: string;
+    previewPath: string;
 };
 export type CuratedObjectsResponseDto = {
     deviceAssetId: string;
     deviceId: string;
     id: string;
     "object": string;
-    resizePath: string;
+    previewPath: string;
 };
 export type CheckExistingAssetsDto = {
     deviceAssetIds: string[];
@@ -643,17 +643,17 @@ export type MetadataSearchDto = {
     originalPath?: string;
     page?: number;
     personIds?: string[];
-    resizePath?: string;
+    previewPath?: string;
     size?: number;
     state?: string;
     takenAfter?: string;
     takenBefore?: string;
+    thumbnailPath?: string;
     trashedAfter?: string;
     trashedBefore?: string;
     "type"?: AssetTypeEnum;
     updatedAfter?: string;
     updatedBefore?: string;
-    webpPath?: string;
     withArchived?: boolean;
     withDeleted?: boolean;
     withExif?: boolean;
@@ -924,9 +924,11 @@ export type SystemConfigThemeDto = {
 };
 export type SystemConfigThumbnailDto = {
     colorspace: Colorspace;
-    jpegSize: number;
+    previewFormat: ImageFormat;
+    previewSize: number;
     quality: number;
-    webpSize: number;
+    thumbnailFormat: ImageFormat;
+    thumbnailSize: number;
 };
 export type SystemConfigTrashDto = {
     days: number;
@@ -1562,7 +1564,7 @@ export function updateAsset({ id, updateAssetDto }: {
         body: updateAssetDto
     })));
 }
-export function searchAssets({ checksum, city, country, createdAfter, createdBefore, deviceAssetId, deviceId, encodedVideoPath, id, isArchived, isEncoded, isExternal, isFavorite, isMotion, isNotInAlbum, isOffline, isReadOnly, isVisible, lensModel, libraryId, make, model, order, originalFileName, originalPath, page, personIds, resizePath, size, state, takenAfter, takenBefore, trashedAfter, trashedBefore, $type, updatedAfter, updatedBefore, webpPath, withArchived, withDeleted, withExif, withPeople, withStacked }: {
+export function searchAssets({ checksum, city, country, createdAfter, createdBefore, deviceAssetId, deviceId, encodedVideoPath, id, isArchived, isEncoded, isExternal, isFavorite, isMotion, isNotInAlbum, isOffline, isReadOnly, isVisible, lensModel, libraryId, make, model, order, originalFileName, originalPath, page, personIds, previewPath, size, state, takenAfter, takenBefore, thumbnailPath, trashedAfter, trashedBefore, $type, updatedAfter, updatedBefore, withArchived, withDeleted, withExif, withPeople, withStacked }: {
     checksum?: string;
     city?: string;
     country?: string;
@@ -1590,17 +1592,17 @@ export function searchAssets({ checksum, city, country, createdAfter, createdBef
     originalPath?: string;
     page?: number;
     personIds?: string[];
-    resizePath?: string;
+    previewPath?: string;
     size?: number;
     state?: string;
     takenAfter?: string;
     takenBefore?: string;
+    thumbnailPath?: string;
     trashedAfter?: string;
     trashedBefore?: string;
     $type?: AssetTypeEnum;
     updatedAfter?: string;
     updatedBefore?: string;
-    webpPath?: string;
     withArchived?: boolean;
     withDeleted?: boolean;
     withExif?: boolean;
@@ -1638,17 +1640,17 @@ export function searchAssets({ checksum, city, country, createdAfter, createdBef
         originalPath,
         page,
         personIds,
-        resizePath,
+        previewPath,
         size,
         state,
         takenAfter,
         takenBefore,
+        thumbnailPath,
         trashedAfter,
         trashedBefore,
         "type": $type,
         updatedAfter,
         updatedBefore,
-        webpPath,
         withArchived,
         withDeleted,
         withExif,
@@ -2803,8 +2805,8 @@ export enum PathEntityType {
 }
 export enum PathType {
     Original = "original",
-    JpegThumbnail = "jpeg_thumbnail",
-    WebpThumbnail = "webp_thumbnail",
+    Preview = "preview",
+    Thumbnail = "thumbnail",
     EncodedVideo = "encoded_video",
     Sidecar = "sidecar",
     Face = "face",
@@ -2905,6 +2907,10 @@ export enum ModelType {
 export enum Colorspace {
     Srgb = "srgb",
     P3 = "p3"
+}
+export enum ImageFormat {
+    Jpeg = "jpeg",
+    Webp = "webp"
 }
 export enum MapTheme {
     Light = "light",
