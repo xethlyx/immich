@@ -67,7 +67,7 @@ class _MobileLayout extends StatelessWidget {
               title: Text(
                 s.title,
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
               ).tr(),
               leading: Icon(s.icon),

@@ -52,7 +52,7 @@ final ThemeData immichLightTheme = ThemeData(
     titleTextStyle: TextStyle(
       fontFamily: 'BeVietnamPro',
       color: Colors.indigo,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.w500,
       fontSize: 18,
     ),
     backgroundColor: immichBackgroundColor,
@@ -178,7 +178,7 @@ final ThemeData immichDarkTheme = ThemeData(
     titleTextStyle: TextStyle(
       fontFamily: 'BeVietnamPro',
       color: immichDarkThemePrimaryColor,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.w500,
       fontSize: 18,
     ),
     backgroundColor: Color.fromARGB(255, 32, 33, 35),
