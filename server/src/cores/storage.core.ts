@@ -120,7 +120,7 @@ export class StorageCore {
     return path.startsWith(THUMBNAIL_DIR) || path.startsWith(ENCODED_VIDEO_DIR);
   }
 
-  async moveAssetImage(asset: AssetEntity, pathType: GeneratedAssetType, format: ImageFormat) {
+  async moveAssetImage(asset: AssetEntity, pathType: GeneratedImageType, format: ImageFormat) {
     const { id: entityId, previewPath, thumbnailPath } = asset;
     return this.moveFile({
       entityId,
