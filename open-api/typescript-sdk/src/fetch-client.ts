@@ -830,6 +830,14 @@ export type SystemConfigFFmpegDto = {
     transcode: TranscodePolicy;
     twoPass: boolean;
 };
+export type SystemConfigThumbnailDto = {
+    colorspace: Colorspace;
+    previewFormat: ImageFormat;
+    previewSize: number;
+    quality: number;
+    thumbnailFormat: ImageFormat;
+    thumbnailSize: number;
+};
 export type JobSettingsDto = {
     concurrency: number;
 };
@@ -922,14 +930,6 @@ export type SystemConfigStorageTemplateDto = {
 export type SystemConfigThemeDto = {
     customCss: string;
 };
-export type SystemConfigThumbnailDto = {
-    colorspace: Colorspace;
-    previewFormat: ImageFormat;
-    previewSize: number;
-    quality: number;
-    thumbnailFormat: ImageFormat;
-    thumbnailSize: number;
-};
 export type SystemConfigTrashDto = {
     days: number;
     enabled: boolean;
@@ -939,6 +939,7 @@ export type SystemConfigUserDto = {
 };
 export type SystemConfigDto = {
     ffmpeg: SystemConfigFFmpegDto;
+    image: SystemConfigThumbnailDto;
     job: SystemConfigJobDto;
     library: SystemConfigLibraryDto;
     logging: SystemConfigLoggingDto;
@@ -951,7 +952,6 @@ export type SystemConfigDto = {
     server: SystemConfigServerDto;
     storageTemplate: SystemConfigStorageTemplateDto;
     theme: SystemConfigThemeDto;
-    thumbnail: SystemConfigThumbnailDto;
     trash: SystemConfigTrashDto;
     user: SystemConfigUserDto;
 };
@@ -2787,8 +2787,8 @@ export enum AssetJobName {
     TranscodeVideo = "transcode-video"
 }
 export enum ThumbnailFormat {
-    Jpeg = "JPEG",
-    Webp = "WEBP"
+    Jpeg = "jpeg",
+    Webp = "webp"
 }
 export enum TimeBucketSize {
     Day = "DAY",
@@ -2888,6 +2888,14 @@ export enum TranscodePolicy {
     Required = "required",
     Disabled = "disabled"
 }
+export enum Colorspace {
+    Srgb = "srgb",
+    P3 = "p3"
+}
+export enum ImageFormat {
+    Jpeg = "jpeg",
+    Webp = "webp"
+}
 export enum LogLevel {
     Verbose = "verbose",
     Debug = "debug",
@@ -2903,14 +2911,6 @@ export enum CLIPMode {
 export enum ModelType {
     FacialRecognition = "facial-recognition",
     Clip = "clip"
-}
-export enum Colorspace {
-    Srgb = "srgb",
-    P3 = "p3"
-}
-export enum ImageFormat {
-    Jpeg = "jpeg",
-    Webp = "webp"
 }
 export enum MapTheme {
     Light = "light",

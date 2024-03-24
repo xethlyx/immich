@@ -9737,6 +9737,9 @@
           "ffmpeg": {
             "$ref": "#/components/schemas/SystemConfigFFmpegDto"
           },
+          "image": {
+            "$ref": "#/components/schemas/SystemConfigThumbnailDto"
+          },
           "job": {
             "$ref": "#/components/schemas/SystemConfigJobDto"
           },
@@ -9773,9 +9776,6 @@
           "theme": {
             "$ref": "#/components/schemas/SystemConfigThemeDto"
           },
-          "thumbnail": {
-            "$ref": "#/components/schemas/SystemConfigThumbnailDto"
-          },
           "trash": {
             "$ref": "#/components/schemas/SystemConfigTrashDto"
           },
@@ -9785,6 +9785,7 @@
         },
         "required": [
           "ffmpeg",
+          "image",
           "job",
           "library",
           "logging",
@@ -9797,7 +9798,6 @@
           "server",
           "storageTemplate",
           "theme",
-          "thumbnail",
           "trash",
           "user"
         ],
@@ -10335,8 +10335,8 @@
       },
       "ThumbnailFormat": {
         "enum": [
-          "JPEG",
-          "WEBP"
+          "jpeg",
+          "webp"
         ],
         "type": "string"
       },
