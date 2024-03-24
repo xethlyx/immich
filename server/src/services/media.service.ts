@@ -153,14 +153,15 @@ export class MediaService {
   }
 
   async handleAssetMigration({ id }: IEntityJob): Promise<JobStatus> {
+    const { thumbnail } = await this.configCore.getConfig();
     const [asset] = await this.assetRepository.getByIds([id]);
     if (!asset) {
       return JobStatus.FAILED;
     }
 
-    await this.storageCore.moveAssetFile(asset, AssetPathType.PREVIEW);
-    await this.storageCore.moveAssetFile(asset, AssetPathType.THUMBNAIL);
-    await this.storageCore.moveAssetFile(asset, AssetPathType.ENCODED_VIDEO);
+    await this.storageCore.moveAssetImage(asset, AssetPathType.PREVIEW, thumbnail.previewFormat);
+    await this.storageCore.moveAssetImage(asset, AssetPathType.THUMBNAIL, thumbnail.thumbnailFormat);
+    await this.storageCore.moveAssetVideo(asset);
 
     return JobStatus.SUCCESS;
   }
@@ -179,7 +180,7 @@ export class MediaService {
   private async generateThumbnail(asset: AssetEntity, type: GeneratedImageType, format: ImageFormat) {
     const { thumbnail, ffmpeg } = await this.configCore.getConfig();
     const size = type === AssetPathType.PREVIEW ? thumbnail.previewSize : thumbnail.thumbnailSize;
-    const path = StorageCore.getImagePath(asset, type);
+    const path = StorageCore.getImagePath(asset, type, format);
     this.storageCore.ensureFolders(path);
 
     switch (asset.type) {

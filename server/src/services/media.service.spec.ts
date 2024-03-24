@@ -4,6 +4,7 @@ import { ExifEntity } from 'src/entities/exif.entity';
 import {
   AudioCodec,
   Colorspace,
+  ImageFormat,
   SystemConfigKey,
   ToneMapping,
   TranscodeHWAccel,
@@ -214,15 +215,19 @@ describe(MediaService.name, () => {
       await sut.handleGeneratePreview({ id: assetStub.image.id });
 
       expect(storageMock.mkdirSync).toHaveBeenCalledWith('upload/thumbs/user-id/as/se');
-      expect(mediaMock.resize).toHaveBeenCalledWith('/original/path.jpg', 'upload/thumbs/user-id/as/se/asset-id.jpeg', {
-        size: 1440,
-        format: 'jpeg',
-        quality: 80,
-        colorspace: Colorspace.SRGB,
-      });
+      expect(mediaMock.resize).toHaveBeenCalledWith(
+        '/original/path.jpg',
+        'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
+        {
+          size: 1440,
+          format: ImageFormat.JPEG,
+          quality: 80,
+          colorspace: Colorspace.SRGB,
+        },
+      );
       expect(assetMock.update).toHaveBeenCalledWith({
         id: 'asset-id',
-        previewPath: 'upload/thumbs/user-id/as/se/asset-id.jpeg',
+        previewPath: 'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
       });
     });
 
@@ -233,15 +238,19 @@ describe(MediaService.name, () => {
       await sut.handleGeneratePreview({ id: assetStub.image.id });
 
       expect(storageMock.mkdirSync).toHaveBeenCalledWith('upload/thumbs/user-id/as/se');
-      expect(mediaMock.resize).toHaveBeenCalledWith('/original/path.jpg', 'upload/thumbs/user-id/as/se/asset-id.jpeg', {
-        size: 1440,
-        format: 'jpeg',
-        quality: 80,
-        colorspace: Colorspace.P3,
-      });
+      expect(mediaMock.resize).toHaveBeenCalledWith(
+        '/original/path.jpg',
+        'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
+        {
+          size: 1440,
+          format: ImageFormat.JPEG,
+          quality: 80,
+          colorspace: Colorspace.P3,
+        },
+      );
       expect(assetMock.update).toHaveBeenCalledWith({
         id: 'asset-id',
-        previewPath: 'upload/thumbs/user-id/as/se/asset-id.jpeg',
+        previewPath: 'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
       });
     });
 
@@ -253,7 +262,7 @@ describe(MediaService.name, () => {
       expect(storageMock.mkdirSync).toHaveBeenCalledWith('upload/thumbs/user-id/as/se');
       expect(mediaMock.transcode).toHaveBeenCalledWith(
         '/original/path.ext',
-        'upload/thumbs/user-id/as/se/asset-id.jpeg',
+        'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
         {
           inputOptions: ['-ss 00:00:00', '-sws_flags accurate_rnd+bitexact+full_chroma_int'],
           outputOptions: [
@@ -266,7 +275,7 @@ describe(MediaService.name, () => {
       );
       expect(assetMock.update).toHaveBeenCalledWith({
         id: 'asset-id',
-        previewPath: 'upload/thumbs/user-id/as/se/asset-id.jpeg',
+        previewPath: 'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
       });
     });
 
@@ -278,7 +287,7 @@ describe(MediaService.name, () => {
       expect(storageMock.mkdirSync).toHaveBeenCalledWith('upload/thumbs/user-id/as/se');
       expect(mediaMock.transcode).toHaveBeenCalledWith(
         '/original/path.ext',
-        'upload/thumbs/user-id/as/se/asset-id.jpeg',
+        'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
         {
           inputOptions: ['-ss 00:00:00', '-sws_flags accurate_rnd+bitexact+full_chroma_int'],
           outputOptions: [
@@ -291,7 +300,7 @@ describe(MediaService.name, () => {
       );
       expect(assetMock.update).toHaveBeenCalledWith({
         id: 'asset-id',
-        previewPath: 'upload/thumbs/user-id/as/se/asset-id.jpeg',
+        previewPath: 'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
       });
     });
 
@@ -306,7 +315,7 @@ describe(MediaService.name, () => {
 
       expect(mediaMock.transcode).toHaveBeenCalledWith(
         '/original/path.ext',
-        'upload/thumbs/user-id/as/se/asset-id.jpeg',
+        'upload/thumbs/user-id/as/se/asset-id-preview.jpeg',
         {
           inputOptions: ['-ss 00:00:00', '-sws_flags accurate_rnd+bitexact+full_chroma_int'],
           outputOptions: [
@@ -337,15 +346,19 @@ describe(MediaService.name, () => {
       assetMock.getByIds.mockResolvedValue([assetStub.image]);
       await sut.handleGenerateThumbnail({ id: assetStub.image.id });
 
-      expect(mediaMock.resize).toHaveBeenCalledWith('/original/path.jpg', 'upload/thumbs/user-id/as/se/asset-id.webp', {
-        format: 'webp',
-        size: 250,
-        quality: 80,
-        colorspace: Colorspace.SRGB,
-      });
+      expect(mediaMock.resize).toHaveBeenCalledWith(
+        '/original/path.jpg',
+        'upload/thumbs/user-id/as/se/asset-id-thumbnail.webp',
+        {
+          format: ImageFormat.WEBP,
+          size: 250,
+          quality: 80,
+          colorspace: Colorspace.SRGB,
+        },
+      );
       expect(assetMock.update).toHaveBeenCalledWith({
         id: 'asset-id',
-        thumbnailPath: 'upload/thumbs/user-id/as/se/asset-id.webp',
+        thumbnailPath: 'upload/thumbs/user-id/as/se/asset-id-thumbnail.webp',
       });
     });
   });
@@ -357,15 +370,19 @@ describe(MediaService.name, () => {
     await sut.handleGenerateThumbnail({ id: assetStub.image.id });
 
     expect(storageMock.mkdirSync).toHaveBeenCalledWith('upload/thumbs/user-id/as/se');
-    expect(mediaMock.resize).toHaveBeenCalledWith('/original/path.jpg', 'upload/thumbs/user-id/as/se/asset-id.webp', {
-      format: 'webp',
-      size: 250,
-      quality: 80,
-      colorspace: Colorspace.P3,
-    });
+    expect(mediaMock.resize).toHaveBeenCalledWith(
+      '/original/path.jpg',
+      'upload/thumbs/user-id/as/se/asset-id-thumbnail.webp',
+      {
+        format: ImageFormat.WEBP,
+        size: 250,
+        quality: 80,
+        colorspace: Colorspace.P3,
+      },
+    );
     expect(assetMock.update).toHaveBeenCalledWith({
       id: 'asset-id',
-      thumbnailPath: 'upload/thumbs/user-id/as/se/asset-id.webp',
+      thumbnailPath: 'upload/thumbs/user-id/as/se/asset-id-thumbnail.webp',
     });
   });
 

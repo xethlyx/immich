@@ -4,6 +4,7 @@ import { SystemConfigCore } from 'src/cores/system-config.core';
 import { AssetEntity } from 'src/entities/asset.entity';
 import { AssetPathType, PathType, PersonPathType } from 'src/entities/move.entity';
 import { PersonEntity } from 'src/entities/person.entity';
+import { ImageFormat } from 'src/entities/system-config.entity';
 import { IAssetRepository } from 'src/interfaces/asset.interface';
 import { ICryptoRepository } from 'src/interfaces/crypto.interface';
 import { IMoveRepository } from 'src/interfaces/move.interface';
@@ -95,8 +96,8 @@ export class StorageCore {
     return StorageCore.getNestedPath(StorageFolder.THUMBNAILS, person.ownerId, `${person.id}.jpeg`);
   }
 
-  static getImagePath(asset: AssetEntity, type: GeneratedImageType) {
-    return StorageCore.getNestedPath(StorageFolder.THUMBNAILS, asset.ownerId, `${asset.id}.${type}`);
+  static getImagePath(asset: AssetEntity, type: GeneratedImageType, format: ImageFormat) {
+    return StorageCore.getNestedPath(StorageFolder.THUMBNAILS, asset.ownerId, `${asset.id}-${type}.${format}`);
   }
 
   static getEncodedVideoPath(asset: AssetEntity) {
@@ -119,34 +120,23 @@ export class StorageCore {
     return path.startsWith(THUMBNAIL_DIR) || path.startsWith(ENCODED_VIDEO_DIR);
   }
 
-  async moveAssetFile(asset: AssetEntity, pathType: GeneratedAssetType) {
-    const { id: entityId, previewPath, thumbnailPath, encodedVideoPath } = asset;
-    switch (pathType) {
-      case AssetPathType.PREVIEW: {
-        return this.moveFile({
-          entityId,
-          pathType,
-          oldPath: previewPath,
-          newPath: StorageCore.getImagePath(asset, AssetPathType.PREVIEW),
-        });
-      }
-      case AssetPathType.THUMBNAIL: {
-        return this.moveFile({
-          entityId,
-          pathType,
-          oldPath: thumbnailPath,
-          newPath: StorageCore.getImagePath(asset, AssetPathType.THUMBNAIL),
-        });
-      }
-      case AssetPathType.ENCODED_VIDEO: {
-        return this.moveFile({
-          entityId,
-          pathType,
-          oldPath: encodedVideoPath,
-          newPath: StorageCore.getEncodedVideoPath(asset),
-        });
-      }
-    }
+  async moveAssetImage(asset: AssetEntity, pathType: GeneratedAssetType, format: ImageFormat) {
+    const { id: entityId, previewPath, thumbnailPath } = asset;
+    return this.moveFile({
+      entityId,
+      pathType,
+      oldPath: pathType === AssetPathType.PREVIEW ? previewPath : thumbnailPath,
+      newPath: StorageCore.getImagePath(asset, AssetPathType.THUMBNAIL, format),
+    });
+  }
+
+  async moveAssetVideo(asset: AssetEntity) {
+    return this.moveFile({
+      entityId: asset.id,
+      pathType: AssetPathType.ENCODED_VIDEO,
+      oldPath: asset.encodedVideoPath,
+      newPath: StorageCore.getEncodedVideoPath(asset),
+    });
   }
 
   async movePersonFile(person: PersonEntity, pathType: PersonPathType) {
