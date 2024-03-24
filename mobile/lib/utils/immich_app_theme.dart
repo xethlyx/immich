@@ -38,11 +38,11 @@ final ThemeData immichLightTheme = ThemeData(
   hintColor: Colors.indigo,
   focusColor: Colors.indigo,
   splashColor: Colors.indigo.withOpacity(0.15),
-  fontFamily: 'Overpass',
+  fontFamily: 'BeVietnamPro',
   scaffoldBackgroundColor: immichBackgroundColor,
   snackBarTheme: const SnackBarThemeData(
     contentTextStyle: TextStyle(
-      fontFamily: 'Overpass',
+      fontFamily: 'BeVietnamPro',
       color: Colors.indigo,
       fontWeight: FontWeight.bold,
     ),
@@ -50,7 +50,7 @@ final ThemeData immichLightTheme = ThemeData(
   ),
   appBarTheme: const AppBarTheme(
     titleTextStyle: TextStyle(
-      fontFamily: 'Overpass',
+      fontFamily: 'BeVietnamPro',
       color: Colors.indigo,
       fontWeight: FontWeight.bold,
       fontSize: 18,
@@ -72,35 +72,35 @@ final ThemeData immichLightTheme = ThemeData(
   drawerTheme: const DrawerThemeData(
     backgroundColor: immichBackgroundColor,
   ),
-  textTheme: const TextTheme(
-    displayLarge: TextStyle(
-      fontSize: 26,
-      fontWeight: FontWeight.bold,
-      color: Colors.indigo,
-    ),
-    displayMedium: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.bold,
-      color: Colors.black87,
-    ),
-    displaySmall: TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.bold,
-      color: Colors.indigo,
-    ),
-    titleSmall: TextStyle(
-      fontSize: 16.0,
-      fontWeight: FontWeight.bold,
-    ),
-    titleMedium: TextStyle(
-      fontSize: 18.0,
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: TextStyle(
-      fontSize: 26.0,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
+  // textTheme: const TextTheme(
+  //   displayLarge: TextStyle(
+  //     fontSize: 26,
+  //     fontWeight: FontWeight.bold,
+  //     color: Colors.indigo,
+  //   ),
+  //   displayMedium: TextStyle(
+  //     fontSize: 14,
+  //     fontWeight: FontWeight.bold,
+  //     color: Colors.black87,
+  //   ),
+  //   displaySmall: TextStyle(
+  //     fontSize: 12,
+  //     fontWeight: FontWeight.bold,
+  //     color: Colors.indigo,
+  //   ),
+  //   titleSmall: TextStyle(
+  //     fontSize: 16.0,
+  //     fontWeight: FontWeight.bold,
+  //   ),
+  //   titleMedium: TextStyle(
+  //     fontSize: 18.0,
+  //     fontWeight: FontWeight.bold,
+  //   ),
+  //   titleLarge: TextStyle(
+  //     fontSize: 26.0,
+  //     fontWeight: FontWeight.bold,
+  //   ),
+  // ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: Colors.indigo,
@@ -160,10 +160,10 @@ final ThemeData immichDarkTheme = ThemeData(
   primaryColor: immichDarkThemePrimaryColor,
   scaffoldBackgroundColor: immichDarkBackgroundColor,
   hintColor: Colors.grey[600],
-  fontFamily: 'Overpass',
+  fontFamily: 'BeVietnamPro',
   snackBarTheme: SnackBarThemeData(
     contentTextStyle: const TextStyle(
-      fontFamily: 'Overpass',
+      fontFamily: 'BeVietnamPro',
       color: immichDarkThemePrimaryColor,
       fontWeight: FontWeight.bold,
     ),
@@ -176,7 +176,7 @@ final ThemeData immichDarkTheme = ThemeData(
   ),
   appBarTheme: const AppBarTheme(
     titleTextStyle: TextStyle(
-      fontFamily: 'Overpass',
+      fontFamily: 'BeVietnamPro',
       color: immichDarkThemePrimaryColor,
       fontWeight: FontWeight.bold,
       fontSize: 18,
@@ -196,35 +196,35 @@ final ThemeData immichDarkTheme = ThemeData(
     backgroundColor: immichDarkBackgroundColor,
     scrimColor: Colors.white.withOpacity(0.1),
   ),
-  textTheme: const TextTheme(
-    displayLarge: TextStyle(
-      fontSize: 26,
-      fontWeight: FontWeight.bold,
-      color: Color.fromARGB(255, 255, 255, 255),
-    ),
-    displayMedium: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.bold,
-      color: Color.fromARGB(255, 255, 255, 255),
-    ),
-    displaySmall: TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.bold,
-      color: immichDarkThemePrimaryColor,
-    ),
-    titleSmall: TextStyle(
-      fontSize: 16.0,
-      fontWeight: FontWeight.bold,
-    ),
-    titleMedium: TextStyle(
-      fontSize: 18.0,
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: TextStyle(
-      fontSize: 26.0,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
+  // textTheme: const TextTheme(
+  //   displayLarge: TextStyle(
+  //     fontSize: 26,
+  //     fontWeight: FontWeight.bold,
+  //     color: Color.fromARGB(255, 255, 255, 255),
+  //   ),
+  //   displayMedium: TextStyle(
+  //     fontSize: 14,
+  //     fontWeight: FontWeight.bold,
+  //     color: Color.fromARGB(255, 255, 255, 255),
+  //   ),
+  //   displaySmall: TextStyle(
+  //     fontSize: 12,
+  //     fontWeight: FontWeight.bold,
+  //     color: immichDarkThemePrimaryColor,
+  //   ),
+  //   titleSmall: TextStyle(
+  //     fontSize: 16.0,
+  //     fontWeight: FontWeight.bold,
+  //   ),
+  //   titleMedium: TextStyle(
+  //     fontSize: 18.0,
+  //     fontWeight: FontWeight.bold,
+  //   ),
+  //   titleLarge: TextStyle(
+  //     fontSize: 26.0,
+  //     fontWeight: FontWeight.bold,
+  //   ),
+  // ),
   cardColor: Colors.grey[900],
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(

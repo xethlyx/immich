@@ -15,6 +15,7 @@ import 'package:immich_mobile/shared/providers/websocket.provider.dart';
 import 'package:immich_mobile/shared/ui/app_bar_dialog/app_bar_profile_info.dart';
 import 'package:immich_mobile/shared/ui/app_bar_dialog/app_bar_server_info.dart';
 import 'package:immich_mobile/shared/ui/confirm_dialog.dart';
+import 'package:immich_mobile/shared/ui/immich_title_text.dart';
 import 'package:immich_mobile/utils/bytes_units.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -48,17 +49,11 @@ class ImmichAppBarDialog extends HookConsumerWidget {
               size: 20,
             ),
           ),
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.center,
-              child: Text(
-                'IMMICH',
-                style: TextStyle(
-                  fontFamily: 'SnowburstOne',
-                  fontWeight: FontWeight.bold,
-                  color: context.primaryColor,
-                  fontSize: 16,
-                ),
+              child: ImmichTitleText(
+                fontSize: 16,
               ),
             ),
           ),
@@ -75,15 +70,12 @@ class ImmichAppBarDialog extends HookConsumerWidget {
         leading: SizedBox(
           child: Icon(
             icon,
-            color: theme.textTheme.labelLarge?.color?.withAlpha(250),
             size: 20,
           ),
         ),
         title: Text(
           text,
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: theme.textTheme.labelLarge?.color?.withAlpha(250),
-          ),
+          style: theme.textTheme.labelLarge?.copyWith(),
         ).tr(),
         onTap: onTap,
       );
@@ -161,9 +153,7 @@ class ImmichAppBarDialog extends HookConsumerWidget {
             ),
             title: Text(
               "backup_controller_page_server_storage",
-              style: context.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: context.textTheme.titleSmall,
             ).tr(),
             isThreeLine: true,
             subtitle: Padding(
@@ -182,8 +172,10 @@ class ImmichAppBarDialog extends HookConsumerWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 12.0),
-                    child:
-                        const Text('backup_controller_page_storage_format').tr(
+                    child: Text(
+                      'backup_controller_page_storage_format',
+                      style: context.textTheme.bodySmall,
+                    ).tr(
                       args: [
                         usedDiskSpace,
                         totalDiskSpace,

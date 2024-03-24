@@ -62,10 +62,8 @@ class AppBarServerInfo extends HookConsumerWidget {
                       ? serverInfoState.versionMismatchErrorMessage
                       : "profile_drawer_client_server_up_to_date".tr(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 11,
+                  style: context.textTheme.labelMedium?.copyWith(
                     color: context.primaryColor,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -102,7 +100,7 @@ class AppBarServerInfo extends HookConsumerWidget {
                           fontSize: contentFontSize,
                           color: context.textTheme.labelSmall?.color
                               ?.withOpacity(0.5),
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -144,7 +142,7 @@ class AppBarServerInfo extends HookConsumerWidget {
                           fontSize: contentFontSize,
                           color: context.textTheme.labelSmall?.color
                               ?.withOpacity(0.5),
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -199,7 +197,7 @@ class AppBarServerInfo extends HookConsumerWidget {
                             fontSize: contentFontSize,
                             color: context.textTheme.labelSmall?.color
                                 ?.withOpacity(0.5),
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             overflow: TextOverflow.ellipsis,
                           ),
                           textAlign: TextAlign.end,
@@ -257,7 +255,7 @@ class AppBarServerInfo extends HookConsumerWidget {
                           fontSize: contentFontSize,
                           color: context.textTheme.labelSmall?.color
                               ?.withOpacity(0.5),
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),

@@ -307,7 +307,7 @@ class LoginForm extends HookConsumerWidget {
           children: [
             Text(
               sanitizeUrl(serverEndpointController.text),
-              style: context.textTheme.displaySmall,
+              style: context.textTheme.titleSmall,
               textAlign: TextAlign.center,
             ),
             if (isPasswordLoginEnable.value) ...[
