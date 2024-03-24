@@ -492,7 +492,7 @@ export class SystemConfigDto implements SystemConfig {
   @Type(() => SystemConfigThumbnailDto)
   @ValidateNested()
   @IsObject()
-  thumbnail!: SystemConfigThumbnailDto;
+  image!: SystemConfigThumbnailDto;
 
   @Type(() => SystemConfigTrashDto)
   @ValidateNested()

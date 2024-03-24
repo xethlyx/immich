@@ -113,7 +113,7 @@ export const defaults = Object.freeze<SystemConfig>({
     hashVerificationEnabled: true,
     template: '{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}',
   },
-  thumbnail: {
+  image: {
     thumbnailFormat: ImageFormat.WEBP,
     thumbnailSize: 250,
     previewFormat: ImageFormat.JPEG,

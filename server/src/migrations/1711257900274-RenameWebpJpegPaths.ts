@@ -6,11 +6,11 @@ export class RenameWebpJpegPaths1711257900274 implements MigrationInterface {
     await queryRunner.renameColumn('assets', 'resizePath', 'previewPath');
     await queryRunner.query(`
       UPDATE system_config
-      SET key = 'thumbnail.previewSize'
+      SET key = 'image.previewSize'
       WHERE key = 'thumbnail.jpegSize'`);
     await queryRunner.query(
       `UPDATE system_config
-      SET key = 'thumbnail.thumbnailSize'
+      SET key = 'image.thumbnailSize'
       WHERE key = 'thumbnail.webpSize'`,
     );
   }
@@ -21,11 +21,11 @@ export class RenameWebpJpegPaths1711257900274 implements MigrationInterface {
     await queryRunner.query(`
       UPDATE system_config
       SET key = 'thumbnail.jpegSize'
-      WHERE key = 'thumbnail.previewSize'`);
+      WHERE key = 'image.previewSize'`);
     await queryRunner.query(
       `UPDATE system_config
       SET key = 'thumbnail.webpSize'
-      WHERE key = 'thumbnail.thumbnailSize'`,
+      WHERE key = 'image.thumbnailSize'`,
     );
   }
 }

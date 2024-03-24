@@ -471,7 +471,7 @@ export class PersonService {
   }
 
   async handleGeneratePersonThumbnail(data: IEntityJob): Promise<JobStatus> {
-    const { machineLearning, thumbnail } = await this.configCore.getConfig();
+    const { machineLearning, image } = await this.configCore.getConfig();
     if (!machineLearning.enabled || !machineLearning.facialRecognition.enabled) {
       return JobStatus.SKIPPED;
     }
@@ -532,8 +532,8 @@ export class PersonService {
     const thumbnailOptions = {
       format: ImageFormat.JPEG,
       size: FACE_THUMBNAIL_SIZE,
-      colorspace: thumbnail.colorspace,
-      quality: thumbnail.quality,
+      colorspace: image.colorspace,
+      quality: image.quality,
     } as const;
 
     await this.mediaRepository.resize(croppedOutput, thumbnailPath, thumbnailOptions);

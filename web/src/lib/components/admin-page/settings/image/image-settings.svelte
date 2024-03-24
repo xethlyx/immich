@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Colorspace, type SystemConfigDto } from '@immich/sdk';
+  import { Colorspace, ImageFormat, type SystemConfigDto } from '@immich/sdk';
   import { isEqual } from 'lodash-es';
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
@@ -25,6 +25,20 @@
     <form autocomplete="off" on:submit|preventDefault>
       <div class="ml-4 mt-4 flex flex-col gap-4">
         <SettingSelect
+          label="THUMBNAIL FORMAT"
+          desc="Format used for generated thumbnail images. WebP produces smaller files at the same quality."
+          number
+          bind:value={config.thumbnail.thumbnailFormat}
+          options={[
+            { value: ImageFormat.Jpeg, text: 'JPEG' },
+            { value: ImageFormat.Webp, text: 'WEBP' },
+          ]}
+          name="resolution"
+          isEdited={config.thumbnail.thumbnailFormat !== savedConfig.thumbnail.thumbnailFormat}
+          {disabled}
+        />
+
+        <SettingSelect
           label="THUMBNAIL RESOLUTION"
           desc="Used when viewing groups of photos (main timeline, album view, etc.). Higher resolutions can preserve more detail but take longer to encode, have larger file sizes, and can reduce app responsiveness."
           number
@@ -38,6 +52,20 @@
           ]}
           name="resolution"
           isEdited={config.thumbnail.thumbnailSize !== savedConfig.thumbnail.thumbnailSize}
+          {disabled}
+        />
+
+        <SettingSelect
+          label="PREVIEW FORMAT"
+          desc="Format used for generated preview images. WebP produces smaller files at the same quality."
+          number
+          bind:value={config.thumbnail.thumbnailFormat}
+          options={[
+            { value: ImageFormat.Jpeg, text: 'JPEG' },
+            { value: ImageFormat.Webp, text: 'WEBP' },
+          ]}
+          name="resolution"
+          isEdited={config.thumbnail.thumbnailFormat !== savedConfig.thumbnail.thumbnailFormat}
           {disabled}
         />
 

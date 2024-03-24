@@ -254,7 +254,7 @@ export interface SystemConfig {
     hashVerificationEnabled: boolean;
     template: string;
   };
-  thumbnail: {
+  image: {
     thumbnailFormat: ImageFormat;
     thumbnailSize: number;
     previewFormat: ImageFormat;
