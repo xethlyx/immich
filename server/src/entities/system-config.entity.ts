@@ -165,6 +165,11 @@ export enum Colorspace {
   P3 = 'p3',
 }
 
+export enum ImageFormat {
+  JPEG = 'jpeg',
+  WEBP = 'webp',
+}
+
 export enum LogLevel {
   VERBOSE = 'verbose',
   DEBUG = 'debug',
@@ -250,8 +255,10 @@ export interface SystemConfig {
     template: string;
   };
   thumbnail: {
-    webpSize: number;
-    jpegSize: number;
+    thumbnailFormat: ImageFormat;
+    thumbnailSize: number;
+    previewFormat: ImageFormat;
+    previewSize: number;
     quality: number;
     colorspace: Colorspace;
   };
