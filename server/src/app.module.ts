@@ -23,6 +23,7 @@ import { DownloadController } from 'src/controllers/download.controller';
 import { FaceController } from 'src/controllers/face.controller';
 import { JobController } from 'src/controllers/job.controller';
 import { LibraryController } from 'src/controllers/library.controller';
+import { MemoryController } from 'src/controllers/memory.controller';
 import { OAuthController } from 'src/controllers/oauth.controller';
 import { PartnerController } from 'src/controllers/partner.controller';
 import { PersonController } from 'src/controllers/person.controller';
@@ -51,6 +52,7 @@ import { IJobRepository } from 'src/interfaces/job.interface';
 import { ILibraryRepository } from 'src/interfaces/library.interface';
 import { IMachineLearningRepository } from 'src/interfaces/machine-learning.interface';
 import { IMediaRepository } from 'src/interfaces/media.interface';
+import { IMemoryRepository } from 'src/interfaces/memory.interface';
 import { IMetadataRepository } from 'src/interfaces/metadata.interface';
 import { IMetricRepository } from 'src/interfaces/metric.interface';
 import { IMoveRepository } from 'src/interfaces/move.interface';
@@ -83,6 +85,7 @@ import { JobRepository } from 'src/repositories/job.repository';
 import { LibraryRepository } from 'src/repositories/library.repository';
 import { MachineLearningRepository } from 'src/repositories/machine-learning.repository';
 import { MediaRepository } from 'src/repositories/media.repository';
+import { MemoryRepository } from 'src/repositories/memory.repository';
 import { MetadataRepository } from 'src/repositories/metadata.repository';
 import { MetricRepository } from 'src/repositories/metric.repository';
 import { MoveRepository } from 'src/repositories/move.repository';
@@ -110,6 +113,7 @@ import { DownloadService } from 'src/services/download.service';
 import { JobService } from 'src/services/job.service';
 import { LibraryService } from 'src/services/library.service';
 import { MediaService } from 'src/services/media.service';
+import { MemoryService } from 'src/services/memory.service';
 import { MetadataService } from 'src/services/metadata.service';
 import { MicroservicesService } from 'src/services/microservices.service';
 import { PartnerService } from 'src/services/partner.service';
@@ -152,6 +156,7 @@ const controllers = [
   FaceController,
   JobController,
   LibraryController,
+  MemoryController,
   OAuthController,
   PartnerController,
   SearchController,
@@ -181,6 +186,7 @@ const services: Provider[] = [
   JobService,
   LibraryService,
   MediaService,
+  MemoryService,
   MetadataService,
   PartnerService,
   PersonService,
@@ -212,6 +218,7 @@ const repositories: Provider[] = [
   { provide: ILibraryRepository, useClass: LibraryRepository },
   { provide: IKeyRepository, useClass: ApiKeyRepository },
   { provide: IMachineLearningRepository, useClass: MachineLearningRepository },
+  { provide: IMemoryRepository, useClass: MemoryRepository },
   { provide: IMetadataRepository, useClass: MetadataRepository },
   { provide: IMetricRepository, useClass: MetricRepository },
   { provide: IMoveRepository, useClass: MoveRepository },
